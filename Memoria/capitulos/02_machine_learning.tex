@@ -126,5 +126,13 @@ $$S_0 \subset S_1 \subset S_2 \subset \cdots$$
 
 Este parámetro de complejidad también puede ser un principio a minimizar para intentar conseguir una solución adecuada pero también simple. La generalización de la medida de complejidad para las clases de funciones es la conocida como dimensión VC o dimensión de Vapnik-Chervonenkis.
 
+\subsubsection{Inferencia Bayesiana}
+
+Este principio inductivo se utiliza en el problema de estimación de la función de densidad. El principio es utilizar la conocida fórmula de Bayes para hacer una estimación de la función de densidad empleando el conocimiento a priori que disponemos del problema. La forma en la que se emplea esta fórmula es de la siguiente:
+
+$$P[modelo | datos] = \frac{P[datos | modelo] \cdot P[modelo]}{P[datos]}$$
+
+donde $P[modelo]$ es la probabilidad a priori, $P[datos]$ es la probabilidad de los datos de entrenamiento y $P[datos | modelo]$ es la probabilidad de que los datos estén generados por el modelo.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
