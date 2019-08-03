@@ -60,5 +60,45 @@ El problema de aprendizaje puede ser subdividido a su vez en cuatro clases disti
 	\item Agrupamiento y cuantificación vectorial: El problema de cuantificación vectorial consiste en intentar explicar la distribución de los vectores de entrada mediante puntos clave llamados centroides. De esta forma se podría reducir la complejidad de los datos expresándolos en función de un sistema de generadores menor. El problema de agrupamiento tiene también relación por utilizar la idea de centroide, pero el objetivo es completamente distinto. El objetivo del problema de agrupamiento es intentar conseguir agrupar los datos en clusters, es decir, regiones del espacio en las que se concentran un conjunto de datos. De esta forma intentamos agrupar los datos que mantienen una relación entre sí. Un ejemplo de un problema de cuantificación vectorial podría ser un problema de reducción de dimensionalidad y un ejemplo de problema de agrupamiento podría ser identificar instancias de datos con características comunes.
 \end{itemize}
 
+\section{Principios y adaptación del aprendizaje}
+
+Según Vapnik \cite{vapnik_v._nature_nodate} la predicción mediante el aprendizaje se puede dividir en dos fases:
+
+\begin{enumerate}
+	\item Aprendizaje o estimación a partir de una muestra.
+	\item Predicción a partir de las estimaciones obtenidas.
+\end{enumerate}
+
+Estas dos fases se corresponden con los dos tipos de inferencia clásica que conocemos, esto es, inducción y deducción. Traído a este caso el proceso de inducción es aquel que a partir de los datos de aprendizaje o los datos de la muestra que tenemos con la salida que corresponde podemos estimar un modelo. Es decir, estamos sacando el conocimiento de los datos para generar el modelo. El proceso de deducción es aquel que, una vez obtenido el modelo estimado (la generalización) obtenemos una predicción de la salida sobre un conjunto de datos.
+
+Por contra, Vapnik propone un paso que resuelve estas dos fases directamente y que él denomina transducción. Este paso consiste en, dados los datos de entrenamiento obtenemos directamente los valores de salida sin tener que hacer la generalización a un modelo. De esta forma, según Vapnik, podríamos reducir el error que cometemos en la predicción. Este razonamiento tiene sentido, pues estamos omitiendo el paso más complejo del proceso de inducción-deducción.
+
+En resumen esta idea se puede resumir en la siguiente figura:
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.5]{imagenes/induccion_deduccion_transduccion}
+	\label{ind_ded_trans}
+	\caption{Tipos de inferencia y transduccion \cite[p.~41]{cherkassky_learning_2007}}
+\end{figure}
+
+Podemos ver que el conocimiento a priori que tenemos del problema se manifiesta una vez se crea el modelo general, de forma que se emplearía en el paso de la inducción. Ya hemos hablado previamente del conocimiento a priori y cómo incorporarlo al modelo, pero por concretar un poco más podemos añadirlo básicamente de dos formas:
+
+\begin{itemize}
+	\item Escogiendo un conjunto de funciones para aproximar la salida del sistema
+	\item Añadiendo restricciones o penalizaciones adicionales a dicho conjunto de funciones.
+\end{itemize}
+
+En resumen, para poder crear la generalización del modelo de forma única necesitamos:
+
+\begin{enumerate}
+	\item Un conjunto de funciones para aproximar la salida.
+	\item Conocimiento a priori.
+	\item Un principio inductivo, que no es más que una indicación de cómo emplear los datos para llegar a la generalización del modelo.
+	\item Un método de aprendizaje, es decir, una implementación del principio inductivo.
+\end{enumerate}
+
+En secciones posteriores revisaremos algunos de los principios inductivos más usados pero es importante reseñar la diferencia entre pricipio inductivo y método de aprendizaje. Para un mismo principio inductivo podemos tener varios métodos de aprendizaje, pues podemos escoger diferentes formas de llevarlo a la práctica. Por ejemplo, uno de los principios inductivos más empleados es el ERM o Empirical Risk Minimization, es decir, minimización del error empírico. Podríamos pensar en diferentes formas de utilizar este principio, por ejemplo sólo avanzamos en la creación del modelo si a cada paso que demos minimizamos el error, o por ejemplo vamos avanzando varios modelos a la vez hasta obtener un número de modelos finales de entre los cuales escogeremos aquel que mejor minimice dicho error.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
