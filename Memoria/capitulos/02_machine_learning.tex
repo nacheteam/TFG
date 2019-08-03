@@ -134,5 +134,13 @@ $$P[modelo | datos] = \frac{P[datos | modelo] \cdot P[modelo]}{P[datos]}$$
 
 donde $P[modelo]$ es la probabilidad a priori, $P[datos]$ es la probabilidad de los datos de entrenamiento y $P[datos | modelo]$ es la probabilidad de que los datos estén generados por el modelo.
 
+\subsubsection{Descripción de mínima longitud}
+
+La idea de este principio es la minimización de la longitud que se necesita emplear para describir un modelo y la correspondiente salida. Llamamos l a la longitud total:
+
+$$l = L(modelo) + L(datos | modelo)$$
+
+Esta medida puede ser vista como una medida de complejidad conjunta de todo el modelo.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
