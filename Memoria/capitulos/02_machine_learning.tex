@@ -189,5 +189,40 @@ Estos puntos hemos de recordar que van referidos al conjunto de datos y no a las
 
 Este Teorema argumenta perfectamente que la complejidad que le damos a los datos por tener una alta dimensionalidad no es transferible a las funciones pues podemos expresar funciones de varias variables como combinación de funciones de una sola variables. En otras palabras no podemos argumentar que la complejidad de funciones univariantes sea mayor o menor que la de funciones multivariantes.
 
+\subsection{Aproximación de funciones}
+
+Como ya hemos dicho en la introducción queremos aproximar una función salida del sistema dentro de una familia de funciones. Este campo no es nuevo, tenemos como herramientas una serie de Teoremas relacionados con la aproximación de funciones como el Teorema de Kolmogorov enunciado anteriormente o el Teorema de aproximación de Weierstrass.
+
+La versión más simple del Teorema de Weierstrass es la de funciones reales definidas en intervalos cerrados, veamos un repaso de estos Teoremas para hacer un esquema de la aproximación de funciones.
+
+\begin{teorema}[Teorema de aproximación de Weierstrass]
+	Supongamos que $f:[a,b] \rightarrow \mathbb{R}$ es una función continua. Entonces $\forall \epsilon >0$, $\exists p$ un polinomio tal que $\forall x\in [a,b]$ tenemos que $|f(x)-p(x)|<\epsilon$.
+\end{teorema}
+
+En otras palabras, podemos aproximar las funciones continuas reales definidas en un intervalo cerrado con el error que queramos en un punto mediante polinomios. Además tenemos versiones más generales aún como el Teorema de Stone-Weierstrass para funciones reales, para espacios localmente compactos y para el espacio de los complejos.
+
+Estas aproximaciones son más sencillas en términos de la complejidad de la clase de funciones, pero tenemos aproximaciones muy famosas, como por ejemplo la serie de Fourier.
+
+\begin{definicion}[Serie de Fourier]
+	Si tenemos una función $f:\mathbb{R} \rightarrow \mathbb{R}$ integrable en el intervalo $[t_0 - \frac{T}{2}, t_0 + \frac{T}{2}]$ entonces se puede obtener el desarrollo en serie de Fourier de $f$ en dicho intervalo. Si $f$ es periódica en toda la recta real la aproximación será válida en todos los valores en los que esté definida.
+	
+	$$f(t) \approx \frac{a_0}{2} + \sum_{n=1}^{\infty}[a_n \cos (\frac{2n\pi}{T}t) + b_n\sin (\frac{2n\pi}{T}t)]$$
+	
+	Donde $a_0, a_n$ y $b_n$ son los coeficientes de la serie de Fourier que tienen la forma:
+	
+	$$a_0 = \frac{2}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t)dt$$
+	
+	$$a_n = \frac{2}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t) cos(\frac{2n\pi}{T}t)dt$$
+	
+	$$b_n = \frac{2}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t) \sin (\frac{2n\pi}{T}t)dt$$
+\end{definicion}
+
+Como podemos ver hemos introducido dos conocidas formas de aproximar funciones, una con funciones polinómicas y otra con funciones trigonométricas. Vamos a dividir en dos los tipos de  aproximación que podemos tener para el problema de aprendizaje.
+
+\begin{enumerate}
+	\item Aproximaciones universales: son aquellas en las que se establece que cualquier función continua puede ser aproximada por otra función de otra clase con el error que queramos. En este grupo podríamos meter a los dos teoremas que hemos dado previamente. Dentro de este grupo podemos tener diferentes tipos de aproximaciones en función de la familia de funciones que escojamos como aproximaciones. Por ejemplo en los dos teoremas previos hemos cogido las clases de funciones polinómicas y trigonométricas pero podríamos haber tomado otras clases diferentes.
+	\item Aproximaciones inexactas: son aquellas en las que no podemos tener una aproximación como las que hemos dado en los teoremas previos, si no que proveen de una aproximación de peor calidad.
+\end{enumerate}
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
