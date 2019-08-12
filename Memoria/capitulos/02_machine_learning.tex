@@ -277,5 +277,51 @@ $$\phi [f] = \int_{\mathbb{R}^d}\frac{|\hat{f}(s)|^2}{\hat{G}(s)}ds$$
 
 Donde $\hat{f}$ indica la transformada de Fourier de la función $f$ y $\frac{1}{\hat{G}}$ es la transformada de Fourier de una función de filtro de paso alto. Es en esta proposición de filtro donde se añade el conocimiento a priori del problema. Por ejemplo pudiera ser interesante en alguna aplicación práctica tener un funcional invariante frente a rotaciones de funciones.
 
+\subsection{Equilibrio entre el sesgo y la varianza}
+
+Este enfoque es muy utilizado en el estudio del error, dividiéndolo en sesgo y varianza para hacer un mejor estudio del mismo y poder enfrentar ambos con varios métodos. Este estudio del caso clásico no es válido (o al menos no del todo) para problemas no supervisados como es nuestro caso. Vamos a hacer una adaptación de esta teoría para que pueda encajar en nuestro caso de estudio.
+
+Tenemos que tener en cuenta que no conocemos la salida real del sistema en el caso de detección de anomalías, es decir, no sabemos estimar con certeza el sesgo y la varianza y por tanto el error que cometemos. En primer lugar vamos a ver una pequeña adaptación de la notación al caso de detección de anomalías para poder hacer un estudio enfocado.
+
+Vamos a notar por $X_1 , ... , X_n$ los datos de test y $\mathcal{D}$ como conjunto de datos de entrenamiento. Además vamos a considerar que existe una función $f$ que nos da la etiqueta real de un dato, esto es, si es o no una anomalía. Por tanto podemos decir que la auténtica etiqueda de un dato es $y_i = f(X_i)$. Además nosotros estaremos usando un modelo ya escogido por nosotros para predecir la etiqueta de un dato de test, esto es $g(X_i, \mathcal{D})\approx y_i+\beta$ donde $\beta$ es un cierto error.
+
+Una vez conocida esta notación podemos definir el error medio al cuadrado como:
+
+$$MSE = \frac{1}{n}\sum_{i=1}^{n}\{y_i - g(X_i, \mathcal{D})\}^2$$
+
+Y podemos definir también el valor esperado del error medio al cuadrado como:
+
+$$E[MSE] = \frac{1}{n} \sum_{i=1}^{n}E[\{y_i - g(X_i, \mathcal{D}\}^2]$$
+
+Una vez definido el $MSE$ esperado podemos desarrollar un poco el cálculo para poder obtener el error y la varianza que esperamos.
+
+En primer lugar podemos escribirlo como:
+
+$$E[MSE] = \frac{1}{n}\sum_{i=1}^{n}E[\{ (y_i-f(X_i)) + (f(X_i) - g(X_i,\mathcal{D})) \}^2]$$
+
+Aquí solo hemos restado y sumado $f(X_i)$, ahora si recordamos que $y_i = f(X_i)$ entonces podemos igualar el primero de los paréntesis a $0$ y por tanto nos queda:
+
+$$E[MSE] = \frac{1}{n}\sum_{i=1}^{n}E[\{ f(X_i) - g(X_i, \mathcal{D}) \}^2]$$
+
+Si seguimos descomponiendo podemos sumar y restar $E[g(X_i, \mathcal{D})]$ con lo que nos quedaría:
+
+$$E[MSE] = \frac{1}{n}\sum_{i=1}^{n}E[\{ f(X_i) - E[g(X_i, \mathcal{D})] \}^2]$$
+
+$$ + \frac{2}{n}\sum_{i=1}^{n}\{ f(X_i) - E[g(X_i, \mathcal{D})] \}\cdot \{ E[g(X_i, \mathcal{D})] - E[g(X_i, \mathcal{D})] \}$$
+
+$$ + \frac{1}{n}E[\{ E[g(X_i, \mathcal{D}) - g(X_i, \mathcal{D})] \}^2]$$
+
+Como es claro, el segundo término da cero por lo que nos queda al final:
+
+$$E[MSE] = \frac{1}{n} \sum_{i=1}^{n}E[\{ f(X_i) - E[g(X_i, \mathcal{D})] \}^2] + \frac{1}{n}\sum_{i=1}^{n}E[\{ E[g(X_i, \mathcal{D})] - g(X_i, \mathcal{D}) \}^2]$$
+
+$$=\frac{1}{n}\sum_{i=1}^{n}\{ f(X_i) - E[g(X_i, \mathcal{D})] \}^2 + \frac{1}{n}\sum_{i=1}^{n}E[\{ E[g(X_i, \mathcal{D})] - g(X_i, \mathcal{D}) \}^2]$$
+
+Si reconocemos cada uno de los términos, en primer lugar el primero de ellos es el sesgo al cuadrado y el segundo la varianza, por lo que finalmente lo que hemos obtenido es:
+
+$$E[MSE] = sesgo^2 + varianza$$
+
+El dilema que se nos plantea es el siguiente: si tomamos modelos con un bajo sesgo en la estimación de los parámetros entonces tendremos una alta varianza y viceversa. Esto significa que no podemos con el conocimiento del que disponemos disminuir tanto el sesgo como la varianza a la vez. Es esta propiedad la que se conoce como la compensación entre sesgo y varianza.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
