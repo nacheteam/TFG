@@ -224,5 +224,58 @@ Como podemos ver hemos introducido dos conocidas formas de aproximar funciones, 
 	\item Aproximaciones inexactas: son aquellas en las que no podemos tener una aproximación como las que hemos dado en los teoremas previos, si no que proveen de una aproximación de peor calidad.
 \end{enumerate}
 
+\subsection{Penalización o control de la complejidad}
+
+Ya hemos discutido brevemente en la sección de principios inductivos la complejidad y cómo penalizarla. Vamos a ver qué elementos queremos controlar con la penalización:
+
+\begin{enumerate}
+	\item La clase de funciones con la que vamos a hacer la aproximación. Tenemos que decidir si escoger una clase tan amplia que nos aseguremos que abarque la solución seguro pero penalicemos la complejidad de la elección o queremos una clase de funciones más ajustada.
+	\item Tipo de funcional de penalización. Tenemos que escoger entre los distintos tipos de penalización que queremos. Esto se reduce a escoger entre dos tipos de penalización: paramétrica y no paramétrica. La primera de ellas se basa en estudiar la suavidad del ajuste junto con el número de parámetros que requiere la aproximación mientras que la segunda intenta estudiar lo mismo, es decir la suavidad del ajuste, sin medir los parámetros de la clase de funciones. En este punto se puede incorporar el conocimiento a priori del problema.
+	\item Método con el que queremos minimizar la penalización. Este apartado está relacionado con los métodos que tenemos de aprender de los datos y el objetivo será intentar hallar una forma eficiente de minimizar tanto el error de la aproximación como la propia penalización.
+	\item Control de la complejidad. Como hemos dicho antes el control de la complejidad no es algo sencillo y habrá que escoger la mejor manera de medir dicha complejidad. En secciones posteriores veremos medidas de complejidad como la dimensión de Vapnik-Chervonenkis.
+\end{enumerate}
+
+Veamos brevemente la distinción que hemos hecho entre la penalización paramétrica y no paramétrica.
+
+\subsubsection{Penalización paramétrica}
+
+Supongamos que tenemos un conjunto de funciones $f(x,\omega)$ con $\omega \in \Omega$ donde $\Omega$ es el conjunto de parámetros de la forma $\omega = (\omega_0 , ... , \omega_m)$. Como la aproximación viene definida por el parámetros $\omega$ entonces podemos definir también la penalización asociada a dicha selección de parámetros.
+
+Vamos a ver los ejemplos de las penalizaciones más empleadas de este tipo.
+
+\begin{itemize}
+	\item Ridge: $\phi_r (\omega_m) = \sum_{i=0}^{m}\omega_i^2$
+	\item Selección de subconjunto: $\phi_s (\omega_m) = \sum_{i=0}^{m}\chi (\omega_i \neq 0)$
+	\item Bridge: $\phi_p (\omega_m) = \sum_{i=0}^{m}|\omega_i|^p$
+	\item Decaimiento de peso: $\phi_q (\omega_m) = \sum_{i=0}^{m}\frac{(\omega_i / q)^2}{1+(\omega_i / q)^2}$ 
+\end{itemize}
+
+\subsubsection{Penalización no paramétrica}
+
+En primer lugar vamos a definir la transformada de Fourier de una función para poder definir el funcional de penalización. 
+
+\begin{definicion}[Transformada de Fourier]
+	Sea $f$ una función integrable Lebesgue, $f\in L(\mathbb{R})$. Se define la transformada de Fourier de $f$ como la función:
+	
+	$$\mathcal{F}\{f\} : \xi \rightarrow \hat{f}(\xi) := \int_{-\infty}^{\infty}f(x)e^{-2\pi i\xi x}dx$$
+\end{definicion}
+
+Recordemos brevemente las propiedades de la transformada de Fourier.
+
+\begin{itemize}
+	\item La transformada de Fourier es un operador lineal: $\mathcal{F}\{a\cdot f + b\cdot g\} = a\mathcal{F}\{f\} + b\cdot \mathcal{F}\{g\}$
+	\item $\mathcal{F}\{f(at)\}(\xi) = \frac{1}{|a|}\cdot \mathcal{F}\{f\}(\frac{\xi}{a})$
+	\item $\mathcal{F}\{f(t-a)\}(\xi) = e^{-\pi i\xi a}\cdot \mathcal{F}\{f\}(\xi)$
+	\item $\mathcal{F}\{f\}(\xi -a) = \mathcal{F}\{e^{\pi iat}f(t)\}(\xi)$
+	\item $\mathcal{F}\{f'\}(\xi) = 2\pi i\xi \mathcal{F}\{f\}(\xi)$
+	\item $\mathcal{F}\{f\}'(\xi) = \mathcal{F}\{(-it)\cdot f(t)\}(\xi)$
+\end{itemize}
+
+Habiendo recordado esto podemos definir el funcional de penalización no paramétrica. Este funcional mide la suavidad del ajuste de la función gracias a que se puede medir, mediante la transformada de Fourier, la ondulación de la función. Por tanto el funcional no paramétrico que se propone es:
+
+$$\phi [f] = \int_{\mathbb{R}^d}\frac{|\hat{f}(s)|^2}{\hat{G}(s)}ds$$
+
+Donde $\hat{f}$ indica la transformada de Fourier de la función $f$ y $\frac{1}{\hat{G}}$ es la transformada de Fourier de una función de filtro de paso alto. Es en esta proposición de filtro donde se añade el conocimiento a priori del problema. Por ejemplo pudiera ser interesante en alguna aplicación práctica tener un funcional invariante frente a rotaciones de funciones.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
