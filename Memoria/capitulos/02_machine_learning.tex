@@ -407,5 +407,43 @@ $$\lim\limits_{n\rightarrow \infty}\frac{G(n)}{n}$$
 
 Por tanto este estudio nos ha dado las condiciones de convergencia y consistencia del ERM.
 
+\subsection{Función de crecimiento y dimensión de Vapnik-Chervonenkis}
+
+El objetivo que perseguimos es obtener cotas para la capacidad de generalización de las máquinas de aprendizaje. Para dar el primer paso según hemos visto necesitamos una forma de evaluar la función de crecimiento vista en el apartado anterior, cosa que no es sencilla de llevar a la práctica.
+
+Para continuar avanzando en este camino lo primero que vamos a presentar es el concepto de dimensión de Vapnik-Chervonenkis o dimensión VC. Cuando discutimos cómo medir la complejidad de un modelo ya hablamos de que la dimensión VC podría ser una buena herramienta para este fin, la introducimos a continuación.
+
+Vapnik y Chervonenkis probaron que la función de crecimiento estaba acotada por una función logarítmica en función del tamaño de la muestra. El punto en el que se tiene $n=h$ donde $h$ es un valor fijo se tiene que el crecimiento de la función de crecimiento empieza a ralentizarse, esta es la conocida como dimensión VC. Si $h$ es un número finito entonces tenemos que la función de crecimiento no va a crecer de forma lineal para muestras de tamaño grande y de hecho se tiene la cota:
+
+$$G(n)\leq h(1+\ln (\frac{n}{h}))$$
+
+La dimensión de Vapnik-Chervonenkis es intrínseca a la elección del conjunto de funciones y además nos da condiciones sobre la convergencia rápida del ERM. Ya hemos visto antes que la cota más grande de la función de crecimiento es:
+
+$$G(n)\leq n\ln (2)$$
+
+Si comparamos las dos cotas en función de n tenemos la siguiente gráfica:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{imagenes/funcion_crecimiento_dimension_vc}
+	\label{funcion_crecimiento_dimension_vc}
+	\caption{Comportamiento de la función de crecimiento \cite[p.~107]{cherkassky_learning_2007}}
+\end{figure}
+
+Como podemos ver el comportamiento una vez que el tamaño de la muestra alcanza la dimensión VC converge de forma mucho más rápida.
+
+Hasta ahora no hemos definido formalmente la dimensión VC pero hemos dado una característica de la misma que nos garantiza una buena convergencia. Decimos que un conjunto de funciones indicadoras tiene dimensión VC $h$ si existe una muestra de puntos de tamaño $h$ que puede ser dividida pero no existe una muestra de tamaño $h+1$ que cumpla dicha condición. Es decir, podemos decir que la dimensión VC es la máxima dimensión para la que existe una solución óptima a nuestro problema de dividir el conjunto de datos entre datos anómalos y normales.
+
+Veamos esto con un ejemplo gráfico:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.35]{imagenes/dimension_vc}
+	\label{dimension_vc}
+	\caption{Ejemplo de cálculo de dimensión VC \href{https://commons.wikimedia.org/wiki/File:Vc_linear.jpg}{Wikimedia}}
+\end{figure}
+
+Como podemos ver si estamos considerando funciones lineales para aproximar podemos dividir todas las posibilidades con tamaño de muestra 3, pero no con tamaño de muestra 4 por lo que en este caso concreto la dimensión VC será 3.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
