@@ -445,5 +445,17 @@ Veamos esto con un ejemplo gráfico:
 
 Como podemos ver si estamos considerando funciones lineales para aproximar podemos dividir todas las posibilidades con tamaño de muestra 3, pero no con tamaño de muestra 4 por lo que en este caso concreto la dimensión VC será 3.
 
+Ahora podemos volver a la cadena de desigualdades que hemos visto en la sección anterior y actualizarla con la nueva mejor cota que hemos desarrollado con la dimensión VC:
+
+$$H(n)\leq H_{ann}(n) \leq G(n) \leq h(1+\ln (\frac{n}{h}))$$
+
+La definición que hemos dado es para funciones indicadoras pero no para funciones reales en general, vamos a generalizar por tanto la definición de la dimensión de Vapnik-Chervonenkis para el caso de funciones reales.
+
+Consideramos como hemos hecho anteriormente funciones de pérdida del tipo $Q(z,\omega)$ pero acotadas superior e inferiormente por constantes:
+
+$$A\leq Q(z,\omega) \leq B$$
+
+Para este caso podemos pensar en una función indicadora que nos diga si $Q(z,\omega)$ está por encima o por debajo de un cierto valor $\beta$ con $A\leq \beta \leq B$. Podemos por tanto generalizar la dimensión VC para el caso de funciones de pérdida reales como la dimensión VC de este tipo de funciones indicadoras dependientes del parámetro $\beta$.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
