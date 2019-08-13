@@ -323,5 +323,89 @@ $$E[MSE] = sesgo^2 + varianza$$
 
 El dilema que se nos plantea es el siguiente: si tomamos modelos con un bajo sesgo en la estimación de los parámetros entonces tendremos una alta varianza y viceversa. Esto significa que no podemos con el conocimiento del que disponemos disminuir tanto el sesgo como la varianza a la vez. Es esta propiedad la que se conoce como la compensación entre sesgo y varianza.
 
+\section{Teoría estadística del aprendizaje}
+
+En esta sección vamos a hacer un repaso por la teoría del aprendizaje, en concreto la teoría desarrollada por Vapnik-Chervonenkis. Esta teoría se basa o tiene como pilares cuatro puntos:
+
+\begin{enumerate}
+	\item Condiciones para la consistencia del principio ERM o minimización del error empírico.
+	\item Cotas en la capacidad de generalización de las máquinas de aprendizaje.
+	\item Principios de inferencia sobre muestras finitas.
+	\item Métodos constructivos para implementar los principios inductivos ya expuestos.
+\end{enumerate}
+
+Durante el desarrollo de esta sección haremos un repaso de estos cuatro puntos para dar el broche final a esta sección y poder realizar la primera de las definiciones de anomalía.
+
+\subsection{Condiciones para la convergencia y consistencia del ERM}
+
+En el problema de aprendizaje disponemos de una muestra en la que tenemos los propios datos de entrada y la salida del sistema. Denotemos a estos elementos por $z=(x,y)$ donde $x$ son los datos de entrada e $y$ la salida del sistema. Por tanto la muestra que se nos da es un conjunto $Z_n = \{ z_1 , ... , z_n \}$. Estos datos están generados como ya sabemos mediante una función de densidad desconocida $p(z)$. Sobre este esquema tenemos una serie de funciones de pérdida y un funcional de pérdida. El objetivo es encontrar dicha función de pérdida $Q(z,\omega )$ que minimice dicho funcional:
+
+$$R(\omega) = \int Q(z,\omega) p(z)dz$$
+
+Por tanto si tenemos la función de pérdida podemos definir el error empírico como:
+
+$$R_{emp}(\omega) = \sum_{i=1}^{n}Q(z_i, \omega)$$
+
+Donde $\omega$ son los parámetros escogidos para el modelo.
+
+Para poder estudiar la consistencia del ERM primero debemos definir formalmente dicha propiedad. Denotamos por $R_{emp}(\omega_n^*)$ el valor del error empírico con la función de pérdida $Q(z,\omega_n^*)$ que minimiza el error empírico para el conjunto de entrenamiento $Z_n$. Denotemos además por $R(\omega_n^*)$ el verdadero valor (desconocido) del error para la función de pérdida. Como se puede ver estos valores dependen del tamaño del conjunto de entrenamiento $n$, podemos por tanto estudiar cómo se comportan estos errores cuando aumentamos el tamaño del conjunto de entrenamiento. Es aquí donde entra la definición de consistencia del ERM. Decimos que es consistente si la sucesión de errores reales y empíricos convergen en probabilidad al mismo límite $R(\omega_0) = \min_{\omega} R(\omega)$. Es decir:
+
+$$R(\omega_n^*) \rightarrow R(\omega_0) \ cuando \ n\rightarrow \infty$$
+$$R_{emp}(\omega_n^*) \rightarrow R(\omega_0) \ cuando \ n\rightarrow \infty$$
+
+Para poder asegurar esta propiedad sobre el ERM tenemos el conocido como Teorema Clave de la Teoría del Aprendizaje de Vapnik y Chervonenkis.
+
+\begin{teorema}[Teorema Clave de la Teoría del Aprendizaje]
+	Para funciones de pérdida acotadas el principio inductivo de minimización del error empírico es consistente sí y sólo si el error empírico converge uniformemente al valor real del error en el siguiente sentido:
+	
+	$$\lim\limits_{n\rightarrow \infty} P[\sup_{\omega}|R(\omega) - R_{emp}(\omega)|>\epsilon] = 0 \ , \ \forall \epsilon >0$$
+\end{teorema}
+
+Cabe recalcar que estas condiciones de consistencia dependen de las propiedades de la clase de funciones elegida. No podemos pretender escoger como clase de aproximación una muy general y seguir manteniendo las condiciones de consistencia del ERM. Aún así el teorema nos está dando condiciones generales para la consistencia del ERM pero son abstractas y no fácilmente aplicables en la práctica. Para ello vamos a estudiar las condiciones de convergencia de ERM que sí serán aplicables en la implementación de algoritmos.
+
+Vamos ahora a particularizar el estudio en el caso de clasificación binaria por ser la materia de estudio que nos ocupa, pues al final tendremos que clasificar instancias en anómalas o no anómalas. Ahora las funciones de pérdida $Q(z,\omega)$ son funciones de pérdida indicadoras. Vamos a notar por $N(Z_n)$ el número de dicotomías que se pueden tener con la clase de funciones elegidas. Esto es el número de formas de clasificar los datos en las dos clases existentes.
+
+Una vez actualizada nuestra notación podemos definir la entropía aleatoria como $H(Z_n) = \ln N(Z_n)$. Esta cantidad es una variable aleatoria dependiente de los valores de entenamiento $Z_n$, podemos definir ahora la entropía de Vapnik-Chervonenkis como el valor medio o esperado de la entropía aleatoria:
+
+$$H(n) = E[\ln N(Z_n)]$$
+
+Esta medida es una cuantificación de la diversidad del conjunto de funciones indicadoras que nos pueden separar los datos en ambas clases.
+
+Por último vamos a definir la función de crecimiento que nos va a permitir hacer cotas y llegar a la condición necesaria y suficiente para la convergencia del ERM. Definimos la función de crecimiento como:
+
+$$G(n) = \ln \max_{Z_n} N(Z_n)$$
+
+Donde aquí estamos notando el máximo número de dicotomías sobre todas las posibles muestras existentes de tamaño $n$. Es más, como el máximo número de formas de dividir un conjunto de tamaño $n$ en dos clases es $2^n$ entonces podemos afirmar que $G(n)\leq n\ln (2)$.
+
+Por último y para completar la cadena de desigualdades que buscamos vamos a definir la entropía reforzada de Vapnik-Chervonenkis:
+
+$$H_{ann}(n) = \ln (E[N(Z_n)])$$
+
+Haciendo uso de la conocida desigualdad de Jensen
+
+$$\sum_{i=1}^{n}a_i \ln (x_i) \leq \ln (\sum_{i=1}^{n}a_i x_i)$$
+
+podemos ver claramente que $H(n)\leq H_{ann}(n)$. Por tanto obtenemos la cadena de desigualdades:
+
+$$H(n)\leq H_{ann}(n) \leq G(n) \leq n\ln (2)$$
+
+La condición necesaria y suficiente de Vapnik-Chervonenkis para la convergencia del ERM que hallaron fue que:
+
+$$\lim\limits_{n\rightarrow \infty} \frac{H(n)}{n} = 0$$
+
+Pero esta condición no asegura una convergencia rápida asintóticamente al error real. Se dice que el ratio de convergencia es rápido asintóticamente en la Teoría de Vapkin-Chervonenkis si:
+
+$$\forall n>n_0 \ P(R(\omega) - R(\omega^*)<\epsilon) = e^{-cn\epsilon^2} \ con \ c>0$$
+
+Para poder cumplir esta condición se dio la condición suficiente para la convergencia rápida:
+
+$$\lim\limits_{n\rightarrow \infty} \frac{H_{ann}(n)}{n} = 0$$
+
+Estas condiciones son dependientes de la distribución de los datos $Z_n$ como es claro al depender de la esperanza de una variable aleatoria dependiente de $Z_n$. Es por tanto que esta condición no es del todo general. Para solventar esto se tiene la consistencia y convergencia del ERM con la condición necesaria y suficiente de que:
+
+$$\lim\limits_{n\rightarrow \infty}\frac{G(n)}{n}$$
+
+Por tanto este estudio nos ha dado las condiciones de convergencia y consistencia del ERM.
+
 \chapter{Concepto de anomalía}
 \label{chapter:anomalia}
