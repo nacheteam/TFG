@@ -1,7 +1,5 @@
-\part{Machine Learning y el concepto de Anomalía}
-\label{part:machineLearning_anomalia}
-
-En esta sección vamos a centrarnos en dos aspectos: el Machine Learning para establecer las herramientas usadas en el estudio y el propio concepto de anomalía y algunas reflexiones acerca del mismo.
+\part{Machine Learning}
+\label{part:machineLearning}
 
 \chapter{Machine Learning}
 \label{chapter:machine_learning}
@@ -457,5 +455,46 @@ $$A\leq Q(z,\omega) \leq B$$
 
 Para este caso podemos pensar en una función indicadora que nos diga si $Q(z,\omega)$ está por encima o por debajo de un cierto valor $\beta$ con $A\leq \beta \leq B$. Podemos por tanto generalizar la dimensión VC para el caso de funciones de pérdida reales como la dimensión VC de este tipo de funciones indicadoras dependientes del parámetro $\beta$.
 
-\chapter{Concepto de anomalía}
-\label{chapter:anomalia}
+\subsection{Límites de la generalización}
+
+Venimos de discutir las propiedades de convergencia y consistencia del principio inductivo ERM. Ahora bajo este principio vamos a intentar ir un paso mas allá en la generalización e intentar responder a las siguientes dos preguntas:
+
+\begin{enumerate}
+	\item ¿Cómo de cerca están el error real $R(\omega^*)$ y el mínimo error empírico $R_{emp}(\omega^*)$?
+	\item ¿Cómo de cerca están el error real $R(\omega^*)$ y el mínimo error posible $R(\omega_0) = \min_{\omega} R(\omega)$?
+\end{enumerate}
+
+Estas preguntas las vamos a resolver en el marco que hemos introducido, con todos los conceptos anteriores de la teoría de Vapnik-Chervonenkis en el caso del problema de clasificación binaria que es el que más se ajusta a nuestro problema.
+
+Según Vapnik-Chervonekis se puede acotar el error real cometido por el error empírico con una probabilidad de al menos $1-\eta$ usando el principio inductivo ERM. La cota que hallaron es la siguiente:
+
+$$R(\omega) \leq R_{emp} \omega) + \frac{\epsilon}{2} \biggl( 1+\sqrt{1+\frac{4\cdot R_{emp}(\omega)}{\epsilon}} \biggl)$$
+
+donde:
+
+$$\epsilon = a_1 \cdot \frac{h(\ln (\frac{a_2 n}{h})+1) - \ln (\frac{\eta}{4})}{n}$$
+
+cuando el conjunto de funciones de pérdida $Q(z, \omega)$ contiene un número infinito de elementos, en caso contrario:
+
+$$\epsilon = 2\frac{\ln (N) - \ln (\eta)}{n}$$
+
+y los valores $a_1 , a_2$ son constantes sobre los que se exigen condiciones.
+
+Para empezar según la demostración de Vapnik, los valores $a_1$ y $a_2$ deben estar en los rangos $0<a_1 \leq 4$ y $0<a_2 \leq 2$ siendo la pareja de valores $a_1 = 4$ y $a_2 = 2$ la correspondiente al peor de los casos, dando en como resultado el siguiente valor de $\epsilon$:
+
+$$\epsilon = 4\frac{h(\ln (\frac{2n}{h})) - \ln (\frac{\eta}{4})}{n}$$
+
+Con esta desigualdad estamos dando la cota de cómo se comporta el error real con respecto al error empírico. Podemos ver que, en el mejor de los casos el error real y el error empírico se van a diferenciar en al menos $\frac{\epsilon}{2}$.
+
+Además, para resolver la segunda de las preguntas la teoría de Vapnik-Chervonenkis nos da la siguiente cota con probabilidad al menos $1-2\eta$:
+
+$$R(\omega_n^*)-\min_{\omega} R(\omega) \leq \sqrt{\frac{-\ln (\eta)}{2n}} + \frac{\epsilon}{2} (1+\sqrt{1+\frac{4}{\epsilon}})$$
+
+En este caso podemos ver que la cota es aún mayor que en el caso anterior, teniéndose tanto en esta cota como en la anterior que a mayor nivel de confianza (menor valor de $\eta$) mayor es la cota y por tanto menos información tenemos. Es decir, no podemos conocer una buena cota con un nivel de confianza alto. Este hecho no debería de sorprendernos pues seguimos trabajando con un número finito de datos y ya sabemos que no podemos obtener una aproximación todo lo buena que queramos con un número finito de datos de entrenamiento.
+
+Este hecho también se refleja en los valores analíticos que hemos dado. Pensemos en un escenario con $\eta \rightarrow 0$, es decir un alto nivel de confianza. Entonces si miramos la expresión de $\epsilon$ podemos observar que $-\ln (\frac{\eta}{4})\rightarrow \infty$ y por tanto $\epsilon \rightarrow \infty$ con lo que la cota no nos aportaría ninguna información en ninguno de los dos casos.
+
+Por otro lado si lo que crece es el tamaño de la muestra, es decir, $n\rightarrow \infty$, estamos aumentando el conocimiento que tenemos sobre el problema y por tanto lo razonable sería que ambas cotas tendieran al valor óptimo. En efecto si observamos el valor de $\epsilon$ cuando $n\rightarrow \infty$ vemos que tiende a $0$ por lo que el error empírico y real están muy cerca y de igual forma el error real y el mínimo error posible. Por tanto podemos decir que nuestro nivel de certeza depende del tamaño de la muestra. Este hecho fue visto por Vapnik en su teoría y propuso como valor aproximado de la confianza de la desigualdad aquel que lleva asociado el valor:
+
+$$\eta = \min (\frac{4}{\sqrt{n}},1)$$
+
