@@ -526,3 +526,43 @@ En cuanto a la definición del SRM hay dos estrategias prácticas que se llevan 
 Estas implementaciones realmente quedan muy libres en la práctica y se proponen por tanto diferentes estructuras de minimización del error empírico y la dimensión VC que se saben que funcionan bien.
 
 Por tanto este principio no se basa meramente en el buen ajuste de los datos, si no que además pretende hacer una minimización de la complejidad del modelo propuesto.
+
+\subsection{Aproximaciones de la dimensión VC}
+
+Como hemos estado viendo las cotas que hemos expuesto y desarrollado dependen en mayor o menor medida de la dimensión VC. Como es lógico este valor no es fácil de calcular, y de hecho sólo se sabe para unos cuantos conjuntos de funciones de aproximación. Vapnik propuso una método para poder estimar este valor y así poder obtener unas cotas aproximadas.
+
+El procedimiento propuesto por Vapnik consiste en, dadas dos muestras $Z_n^1 , Z_n^2$ de tamaño $n$ de pares $z_i = (x,y)$ de datos de entrada y salida del sistema vamos a medir el error empírico con nuestro modelo que cometemos observando la máxima desviación de los ratios de error de estas dos muestras independientes, es decir:
+
+$$\xi (n) = \max_{\omega} (|Error(Z_n^1) - Error(Z_n^2|)$$
+
+donde $Error(Z_n^i)$ es la tasa de error empírico cometido por el modelo. De acuerdo con la teoría desarrollada por Vapnik-Chervonenkis tenemos que $\xi (n)$ está acotada:
+
+$$\xi (n) \leq \Phi (\frac{n}{h})$$
+
+donde $h$ es la dimensión VC y:
+
+\[ \Phi (\tau) = 
+\begin{cases}
+1 & si \ \tau <0.5 \\
+a\frac{\ln (2\tau) + 1}{\tau - k} \bigg( \sqrt{1+\frac{b (\tau - k)}{\ln (2\tau) + 1}} + 1 \bigg) & en \ otro \ caso
+\end{cases}
+\]
+
+donde $\tau = \frac{n}{h}$ y las constantes $a = 0.16$ y $b = 1.2$ son constantes estimadas empíricamente por Vapnik y $k = 0.14928$ tomada así para que $\Phi (0.5) = 1$ de forma que la cota sea muy ajustada.
+
+Por tanto describió con esto el siguiente esquema de obtención de la aproximación de la dimensión VC:
+
+\begin{enumerate}
+	\item Generamos una muestra de tamaño $2n$ etiquetada $z_{2n}$
+	\item Dividimos la muestra en dos del mismo tamaño $Z_n^1$ y $Z_n^2$
+	\item Invertir las etiquetas de $Z_n^2$
+	\item Mezclar los dos conjuntos de nuevo y entrenar el modelo
+	\item Separar el conjunto en dos de nuevo e invertir las etiquetas del segundo, volver a mezclarlos y entrenar de nuevo el modelo
+	\item Medir  la diferencia de los errores $\xi (n) = |Error(Z_n^1) - Error(Z_n^2)|$
+\end{enumerate}
+
+Como hemos dicho antes la desigualdad $\xi (n) \leq \Phi (\frac{n}{h})$ es muy ajustada y por tanto, podemos obtener la aproximación de $h$ como:
+
+$$h^* = arg \min_{h} [\xi (n) - \Phi (\frac{n}{h})]$$
+
+Es decir, el valor que haga dicha diferencia menor, es decir que más acerque los valores $\xi (n)$ y $\Phi (\frac{n}{h})$.
