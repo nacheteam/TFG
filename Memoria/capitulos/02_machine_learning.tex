@@ -498,3 +498,31 @@ Por otro lado si lo que crece es el tamaño de la muestra, es decir, $n\rightarr
 
 $$\eta = \min (\frac{4}{\sqrt{n}},1)$$
 
+\subsection{Principio de minimización del error estructural (SRM)}
+
+Hemos visto una construcción en base al principio inductivo ERM y hemos razonado que funciona bien para casos en los que la proporción $\frac{n}{h}$, es decir la proporción del tamaño de la muestra y la dimensión VC, es grande. En este caso quiere decir que tenemos muchos datos comparado con la dimensión VC y por tanto $\epsilon \approx 0$. Por contra cuando tenemos que $\frac{n}{h}$ es pequeño no tenemos mucha información de la cota. Por tanto, al estar el número de datos fijo por el problema, tenemos que buscar un conjunto de funciones para aproximar la salida del sistema que nos den una dimensión VC controlable para hacerla más o menos grande.
+
+El principio inductivo que pretende plasmar esta idea es el principio de minimización del error estructural o SRM. Bajo este principio se le otorga a la clase de funciones de pérdida de una estructura, es decir, tenemos subconjuntos de la forma $S_k = \{ Q(z,\omega), \ \omega \in \Omega_k \}$ de forma que:
+
+$$S_1 \subset S_2 \subset ... \subset S_k \subset ...$$
+
+donde cada subconjunto de funciones de pérdida tiene asociada una dimensión VC $h_k$ teniéndose el orden:
+
+$$h_1 \leq h_2 \leq ... \leq h_k \leq ...$$
+
+Al igual que en el Teorema clave de la Teoría del Aprendizaje de Vapnik-Chervonenkis se exigía que las funciones de pérdida estuvieran acotadas en este caso vamos a pedir que las funciones contenidas en cada uno de los $S_k$ o bien estén acotadas o si no que cumplan que:
+
+$$\sup_{\omega \in \Omega_k} \frac{(\int Q^p (z,\omega)dp(z))^{\frac{1}{p}}}{\int Q(z,\omega)dp(z)}\leq \tau_k , \ p>2$$
+
+para alguna pareja $(p,\tau_k)$.
+
+En cuanto a la definición del SRM hay dos estrategias prácticas que se llevan a cabo para su implementación que son:
+
+\begin{enumerate}
+	\item Mantener la dimensión VC fija y minimizar el error empírico.
+	\item Mantener el error empírico constante y pequeño y minimizar la dimensión VC.
+\end{enumerate}
+
+Estas implementaciones realmente quedan muy libres en la práctica y se proponen por tanto diferentes estructuras de minimización del error empírico y la dimensión VC que se saben que funcionan bien.
+
+Por tanto este principio no se basa meramente en el buen ajuste de los datos, si no que además pretende hacer una minimización de la complejidad del modelo propuesto.
