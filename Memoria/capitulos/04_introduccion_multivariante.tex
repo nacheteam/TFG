@@ -96,3 +96,163 @@ En cuanto a la definición de independencia entre las variables aleatorias que d
 	
 	$$\Phi_Y (t) = E[e^{itY}] = E[e^{it \sum_{j=1}^{p}X_j}] = \prod_{j=1}^{p}\Phi_{X_j} (t)$$
 \end{proposicion}
+
+\subsection{Probabilidad y esperanza condicionada}
+
+En esta sección vamos a describir la probabilidad y esperanza condicionada de una variable aleatoria y no de un vector aleatorio. Este hecho es sencillo de deducir, pues como hemos introducido previamente la distribución de probabilidad de un vector aleatorio viene determinada por una distribución de probabilidad de una variable aleatoria. Por tanto el estudio de la probabilidad y esperanza condicionada en el caso univariante se hace válido para el caso multivariante. 
+
+En primer lugar debemos introducir el concepto de probabilidad condicionada tal y cómo la conocemos hasta ahora de Bayes. Partimos de un espacio de probabilidad $(\Omega , \mathcal{A}, \mathcal{P})$.
+
+\begin{definicion}
+	Definimos la probabilidad condicionada a un suceso $B\in \mathcal{A}$ con $P(B)>0$ como:
+	
+	$$P(\cdot | B) : \mathcal{A} \rightarrow [0,1] , \ \ \ P(A | B) = \frac{P(A\cap B)}{P(B)}$$
+\end{definicion}
+
+Esta es una función de probabilidad, por lo que nos lleva a pensar en el espacio de probabilidad que genera, es más podemos pensar en el espacio de probabilidad en el que la probabilidad condicionada no se anula, es decir:
+
+$$\mathcal{A}_B = \{ C = A\cap B, \ A\in \mathcal{A} \}$$
+
+Por tanto solemos considerar como espacio de probabilidad condicionada al espacio $(B, \mathcal{A}_B , P(\cdot | B))$.
+
+Partiendo de este espacio de probabilidad podemos considerar una variable aleatoria $X : (\Omega , \mathcal{A}, \mathcal{P}(\cdot | B)) \rightarrow (\mathbb{R}, \mathcal{B})$. 
+
+\begin{definicion}
+	Definimos la esperanza de esta variable aleatoria condicionada a $B$ como:
+	$$E[X | B] = \int_{\Omega}XdP(\cdot | B) = \int_{\Omega}XdP(\cdot | B) = \frac{1}{P(B)}\int_{B}XdP = \frac{E[X1_B]}{P(B)}$$
+	Donde $1_B$ representa la función indicadora del conjunto $B$.
+\end{definicion}
+
+No sólo podemos estudiar la probabilidad y esperanzas condicionadas a un evento, si no que también las podemos estudiar condicionadas a una $\sigma$-álgebra. En este terreno vamos a distinguir dos posibilidades: condicionamiento a una $\sigma$-álgebra generada por una partición numerable de sucesos de probabilidad no nula y condicionamiento a una $\sigma$-álgebra arbitraria.
+
+\begin{definicion}
+	Definimos la esperanza condicionada a una $\sigma$-álgebra $\mathcal{A}$ generada por $\{ B_n \}\subset \mathcal{A}$ con $B_i \cap B_j = \phi , \ i\neq j$, $\bigcup_{n=1}^{\infty} B_n = \Omega$ y $P(B_i)>0 , \ \forall i$. Siendo la $\mathcal{U} = \sigma (\{ B_n \})$ la $\sigma$-álgebra generada por $\{ B_n \}$. Con este marco, definimos la esperanza de una variable aleatoria $X: (\Omega , \mathcal{A}, P) \rightarrow (\mathbb{R}, \mathcal{B})$ condicionada a la $\sigma$-álgebra $\mathcal{U}$ como:
+	
+	$$E[X | \mathcal{U}](\omega) = \sum_{n=1}^{\infty} E[X | B_n]1_{B_n}(\omega)$$
+\end{definicion}
+
+\begin{propiedades}
+	\begin{enumerate}
+		\item $E[X | \mathcal{U}]: (\Omega , \mathcal{U}) \rightarrow (\mathbb{R}, \mathcal{B})$ es $\mathcal{U}$-medible.
+		\item $E[E[X | \mathcal{U}]] = \sum_{n=1}^{\infty}E[X | B_n]P(B_n) = \sum_{n=1}^{\infty}E[X1_{B_n}] = E[X]$
+	\end{enumerate}
+\end{propiedades}
+
+De igual forma podemos definir la probabilidad condicionada a una $\sigma$-álgebra generada por una partición numerable de sucesos no nulos.
+
+\begin{definicion}
+	Definimos la probabilidad de un suceso $A\in \mathcal{A}$ condicionada a la $\sigma$-álgebra $\mathcal{U}$ como:
+	
+	$$P(A | \mathcal{U}) = E[1_A | \mathcal{U}] = \sum_{n=1}^{\infty}E[1_A | B_n]1_{B_n} = \sum_{n=1}^{\infty}P(A | B_n)1_{B_n}$$ casi seguramente.
+\end{definicion}
+
+Podemos también dar unas propiedades inmediatas de la probabilidad condicionada tomando como base las de la esperanza.
+
+\begin{propiedades}
+	\begin{enumerate}
+		\item $P(A | \mathcal{U})$ es $\mathcal{U}$-medible.
+		\item $E[P(A | \mathcal{U})] = P(A)$
+	\end{enumerate}
+\end{propiedades}
+
+Una vez visto esto podemos hacer una definición con una $\sigma$-álgebra arbitraria. Cabe decir que en este caso no vamos a poder dar una definición constructiva y fácil de calcular como sí hemos hecho en el caso particular anterior. Lo que sí vamos a tener con esta definición más general es el mantenimiento de las propiedades que hemos visto en primera instancia tanto de la probabilidad como de la esperanza condicionada. Sobra decir además que esta definición coincide con la anterior en el caso particular de una $\sigma$-álgebra generada por una partición numerable de sucesos no nulos.
+
+\begin{definicion}
+	Definimos la esperanza de una variable aleatoria $X$ en el marco dado condicionada a una $\sigma$-álgebra $\mathcal{U}\subset \mathcal{A}$ como la única función $\mathcal{U}$-medible tal que:
+	
+	$$\forall u \in \mathcal{U} \ \int_{\mathcal{U}}E[X | \mathcal{U}]P_{\mathcal{U}} = \int_{\mathcal{U}}X dP$$ casi seguramente $P_{\mathcal{U}}$. Donde $\forall u\in \mathcal{U}$ $P_{\mathcal{U}}(u) = P(u)$.
+\end{definicion}
+
+Igualmente podemos dar una definición de la probabilidad condicionada a una $\sigma$-álgebra arbitraria tomando como base la definición de esperanza condicionada.
+
+\begin{definicion}
+	Definimos la probabilidad de $A\in \mathcal{A}$ condicionada a la $\sigma$-álgebra $\mathcal{U}$ como:
+	
+	$$P(A | \mathcal{U}) = E[1_A | \mathcal{U}]$$ casi seguramente $P_{\mathcal{U}}$.
+\end{definicion}
+
+Por último antes de dar unas propiedades que nos den un poco más de conocimiento y herramientas de trabajo vamos a ver el concepto de probabilidad y esperanza condicionada a una variable aleatoria y no a un suceso o una $\sigma$-álgebra como hemos visto previamente.
+
+Partimos igualmente del marco $(\Omega , \mathcal{A} , P)$ con dos variables aleatorias $X,Y$.
+
+\begin{definicion}
+	Definimos la $\sigma$-álgebra generada por la variable aleatoria $Y$ como la menor $\sigma$-álgebra que hace medible a la variable aleatoria $Y$ y la notaremos como $\sigma (Y)$.
+\end{definicion}
+
+Ahora si podemos definir la esperanza de una variable aleatoria condicionada a otra.
+
+\begin{definicion}
+	Definimos la esperanza de la variable aleatoria $X$ condicionada a la variable aleatoria $Y$ como:
+	$$E[X | Y] = E[X | \sigma (Y)]$$
+\end{definicion}
+
+Como anotación cabe decir que esta esperanza condicionada es una función dependiente de la variable aleatoria $Y$, es decir podemos expresarla como:
+
+$$g(y) = E[X | Y=y]$$
+
+Ahora que tenemos la definición de la esperanza condicionada a una variable aleatoria podemos usar el concepto como hemos hecho anteriormente para definir la probabilidad de un suceso condicionado a una variable aleatoria.
+
+\begin{definicion}
+	Para todo $A\in \mathcal{A}$ definimos la probabilidad de $A$ condicionada a la variable aleatoria $Y$ como:
+	$$P(A | Y) = E[1_A | \sigma (Y)]$$
+	casi seguramente $P_{\sigma (Y)}$
+\end{definicion}
+
+Ahora estamos en condiciones de dar una propiedades elementales y de suavizamiento que nos van a dar herramientas con las esperanzas condicionadas. En este punto ya hemos visto que, al haber hecho las definiciones de esperanza y probabilidades usándolas indistintamente las propiedades que vamos a dar para la esperanza se pueden emplear para las probabilidades utilizando sus definiciones que impliquen el uso de esperanzas.
+
+Sobre estas propiedades vamos a realizar algunas de las demostraciones de las propiedades elementales y de las de suavizamiento que vamos a dar para poner de relieve cómo podemos hacer uso de la probabilidad y esperanza condicionada.
+
+\begin{propiedades}[Propiedades elementales]
+	Partimos de un espacio de probabilidad $(\Omega , \mathcal{A}, P)$, $\mathcal{U}$ una $\sigma$-álgebra contenida en $\mathcal{A}$ y $X,Y$ variables aleatorias integrables.
+	\begin{enumerate}
+		\item $E[cte | \mathcal{U}] = cte$ casi seguramente $P_{\mathcal{U}}$
+		\item Sean $a, b \in \mathbb{R}$ $E[aX + bY | \mathcal{U}] = aE[X | \mathcal{U}] + bE[Y | \mathcal{U}]$ casi seguramente $P_{\mathcal{U}}$, es decir, la esperanza condicionada cumple la propiedad de linealidad.
+		\item $X\geq Y$ casi seguramente $P$ $\Rightarrow E[X | \mathcal{U}] \geq E[Y | \mathcal{U}]$ casi seguramente $P_{\mathcal{U}}$.
+		\item $|E[X | \mathcal{U}]| \leq  E[|X| |\mathcal{U}]$
+	\end{enumerate}
+\end{propiedades}
+
+\begin{demostracion}
+	Vamos a demostrar la propiedad 1 para ver como trabajar con las igualdades casi seguras.
+	\begin{enumerate}
+		\item[1.] Como la igualdad es casi seguramente podemos aplicar integrales en la misma con lo que obtenemos lo siguiente:
+		$$\forall u \in \mathcal{U} \ \int_{u} E[cte | \mathcal{U}]dP_{\mathcal{U}} = \int_{u}cte dP = cte P(u) = cte P_{\mathcal{U}}(u) = \int_{u}cte dP_{\mathcal{U}}$$
+		Como la igualdad es con integrales, podemos decir por tanto que $E[cte | \mathcal{U}] = cte$ casi seguramente $P_{\mathcal{U}}$.
+	\end{enumerate}
+\end{demostracion}
+
+\begin{propiedades}[Propiedades de suavizamiento]
+	Partimos del marco del espacio probabilístico $(\Omega , \mathcal{A}, P)$ con una $\sigma$-álgebra $\mathcal{U}\subset \mathcal{A}$.
+	\begin{enumerate}
+		\item Si $X$ es una variable aleatoria integrable y $\mathcal{U}$-medible entonces se tiene que $E[X | \mathcal{U}] = X$ casi seguramente $P_{\mathcal{U}}$
+		\item Sean $X, Y$ variables aleatorias con $X$ $\mathcal{U}$-medible, $Y$ integrable y $XY$ integrable, entonces se tiene que $E[XY | \mathcal{U}] = XE[Y | \mathcal{U}]$ casi seguramente $P_{\mathcal{U}}$.
+		\item Se dice que $X$ es independiente de $\mathcal{U}$ si $X$ y $1_{\mathcal{U}}$ son independientes. Si $X$ es independiente de $\mathcal{U}$ entonces $E[X | \mathcal{U}] = E[X]$ casi seguramente $P_{\mathcal{U}}$.
+		\item Sean $\mathcal{U}_1 \subset \mathcal{U}_2 \subset \mathcal{A}$ y $X$ una variable aleatoria integrable, entonces:
+		$$E[X | \mathcal{U}_1] = E[E[X | \mathcal{U}_1] | \mathcal{U}_2] = E[E[X | \mathcal{U}_2] | \mathcal{U}_1]$$ casi seguramente $P_{\mathcal{U}}$.
+	\end{enumerate}
+\end{propiedades}
+
+Vamos a hacer la demostración de las 4 propiedades para dar así una pincelada de cómo aplicar los conceptos vistos hasta ahora.
+
+\begin{demostracion}
+	Demostremos las propiedades de suavizamiento:
+	\begin{enumerate}
+		\item[4.] Sabemos que $E[X | \mathcal{U}_1] = Z$ es $\mathcal{U}_1$-medible y por tanto es $\mathcal{U}_2$-medible, por lo que $E[Z | \mathcal{U}_2] = Z$ casi seguramente $P_{\mathcal{U}_2}$.
+		
+		Vamos a utilizar ahora el hecho de que las igualdades son casi seguramente y por tanto vamos a ver si aplicando integrales en ambos lados de la igualdad obtenemos el mismo resultado y confirmamos la igualdad.
+		
+		$\forall u\in \mathcal{U}_1 \subset \mathcal{U}_2$ tenemos $\int_{u} E[E[X | \mathcal{U}_1] | \mathcal{U}_2]dP_{\mathcal{U}_2} = \int_{u}E[X | \mathcal{U}_1]dP_{\mathcal{U}_1} = \int_{u}XdP$
+		
+		Veamos ahora desarrillando el otro término.
+		
+		$\int_{u} E[E[X | \mathcal{U}_2] | \mathcal{U}_1]dP_{\mathcal{U}_1} = \int_{u}E[X | \mathcal{U}_2] dP_{\mathcal{U}_2} = \int_{u}XdP$
+		
+		Al haber llegado a la misma igualdad en integrales tenemos por tanto la igualdad casi seguramente que buscábamos.
+		\item[1.] Como $X$ es $\mathcal{U}$-medible entonces tenemos que $\forall u \in \mathcal{U} \int_{u}E[X | \mathcal{U}] dP_{\mathcal{U}} = \int_{u}XdP = \int_{u}XdP_{\mathcal{U}}$ pues al ser $\mathcal{U}$-medible tenemos que $E[X] = \int_{\Omega} XdP = \int_{\Omega}XdP_{\mathcal{U}}$.
+		\item[3.] $\forall u \in \mathcal{U}$ $\int_{u}E[X | \mathcal{U}]dP_{\mathcal{U}} = \int_{u} XdP = \int_{\Omega}1_{u}XdP = E[1_u X] = $
+		
+		$= E[1_u]E[X] = P(u)E[X] = P_{\mathcal{U}}(u)E[X] = \int_{u}E[X]dP_{\mathcal{U}}$
+	\end{enumerate}
+\end{demostracion}
+
+Ya hemos dado las definiciones y propiedades de probabilidad y esperanza condicionadas, ahora vamos a continuar avanzando con las distribuciones marginales y conjuntas.
