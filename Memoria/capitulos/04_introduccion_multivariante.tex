@@ -1,0 +1,59 @@
+\chapter{Introducción de Estadística Multivariante}
+\label{chapter:estadistica_multivariante}
+
+Vamos a dar otra definición de anomalía que no coincide con la que hemos visto basada en distancias, pero antes de dar esa definición debemos hacer un breve repaso de estadística multivariante y probabilidad para poder comprender y enmarcar dicha definición.
+
+\section{Introducción}
+
+En primer lugar vamos a describir conceptos básicos sobre los que poder construir los conceptos que necesitamos para la definición de anomalía basada en probabilidades.
+
+En primer lugar vamos a definir el concepto de variable aleatoria.
+
+\begin{definicion}
+	Una variable aleatoria es una función $X:\Omega \rightarrow E$ que parte de un espacio de probabilidad $(\Omega , \mathcal{F}, \mathcal{P})$ y llega a un espacio medible $(E, \mathcal{B})$, donde $X$ además es una función medible.
+\end{definicion}
+
+Normalmente ya sabemos que $E\subseteq \mathbb{R}$ y además cabe recordar que $\mathcal{F}$ es una $\sigma$-álgebra. Además cabe recordar la definición de función medible:
+
+\begin{definicion}
+	Decimos que una función $X: (\Omega , \mathcal{F}, \mathcal{P}) \rightarrow (E, \mathcal{B})$ es medible si $X^{-1}(B)\subset \mathcal{F}$, $\forall B \in \mathcal{B}$.
+\end{definicion}
+
+Esta definición puede extenderse al caso vectorial, introduciendo con esto la noción de vector aleatorio:
+
+\begin{definicion}
+	Un vector aleatorio $\underline{X} = (X_1 , ... , X_p)$ es una aplicación medible $\underline{X}: (\Omega , \mathcal{F}, \mathcal{P})\rightarrow (E, \mathcal{B}^p)$ donde $E\subseteq \mathbb{R}^p$.
+\end{definicion}
+
+Se puede demostrar además la caracterización:
+
+\begin{proposicion}
+	Un vector $\underline{X} = (X_1, ..., X_p)$ es un vector aleatorio si y sólo si $X_i : (\Omega , \mathcal{F}, \mathcal{P}) \rightarrow (\mathbb{R}, \mathcal{B})$ es una función medible.
+\end{proposicion}
+
+Con este vector aleatorio podemos estudiar o definir la distribución de probabilidad del mismo sobre $( \mathbb{R}^p , \mathcal{B}^p )$ $P_{\underline{X}}$ como:
+
+$$P_{\underline{X}} [B]:= P[\underline{X}^{-1}(B)] \ \forall B\in \mathcal{B}$$
+
+con lo que el espacio $(\mathbb{R}^p , \mathcal{B}^p , P_{\underline{X}})$ es un espacio de probabilidad o probabilístico.
+
+Sobre los conocimientos de la definición de la función de distribución univariante podemos hacer una definición análoga para el caso multivariante.
+
+\begin{definicion}
+	Se define la función de distribución asociada a la probabilidad inducida como:
+	
+	$$F_{\underline{X}} (\underline{x}) = P_{\underline{X}} [X_1 \leq x_1 , ... , X_p \leq x_p] \ , \ \forall \underline{x} = (x_1 , ... , x_p) \in \mathbb{R}^p$$
+\end{definicion}
+
+De igual forma podemos caracterizar la función de densidad como aquella $f_{\underline{X}}$ que, de existir, cumple que:
+
+$$F_{\underline{X}} (\underline{x}) = \int_{- \infty}^{x_1} \int_{-\infty}^{x_2} ... \int_{-\infty}^{x_p} f_{\underline{X}}(u_1 , ... , u_p) du_1 ... du_p$$
+
+Otra forma de determinar de forma única la distribución de un vector aleatorio es mediante la función característica, lo que nos va a dar además una caracterización de la independencia que introduciremos en siguiente lugar.
+
+\begin{definicion}
+	Dado un vector aleatorio $X = (X_1 , ... , X_p)$ se define la función característica como $\Phi_{\underline{X}} (\underline{t}) = E[e^{i\underline{t}X}]$ con $\underline{t} = (t_1 , ... , t_p)\in \mathbb{R}^p$ donde la función $E[\cdot]$ denota la esperanza, por lo que:
+	$$\Phi_{\underline{X}} (\underline{t}) = \int_{\mathbb{R}^p} e^{i\underline{t} \underline{X}} P_{\underline{X}}(d\underline{x})$$
+\end{definicion}
+
+Con esto ya podemos introducir el concepto de independencia en varias variables. 
