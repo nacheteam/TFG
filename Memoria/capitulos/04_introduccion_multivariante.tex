@@ -57,3 +57,42 @@ Otra forma de determinar de forma única la distribución de un vector aleatorio
 \end{definicion}
 
 Con esto ya podemos introducir el concepto de independencia en varias variables. 
+
+\subsection{Independencia}
+
+\begin{definicion}
+	Dados dos vectores aleatorios $\underline{X} = (X_1 , ... , X_p)$, $\underline{Y} = (Y_1 , ... , Y_p)$ se dice que son independientes si:
+	$$F_{\underline{X}, \underline{Y}}(\underline{x}, \underline{y}) = F_{\underline{X}}(\underline{x}) \cdot F_{\underline{Y}}(\underline{y})$$
+\end{definicion}
+
+Podemos también definir la independencia entre las variables de un vector aleatorio como:
+
+\begin{definicion}
+	$X = (X_1 , ... , X_p)$ se dice que está compuesto de variables independientes si $\forall B = B_1 \times ... \times B_p$ con $B_i \in \mathcal{B}$ se tiene que:
+	
+	$$P_{\underline{X}}(B) = P_{X_1}[B_1] \cdot ... \cdot P_{X_p}[B_p]$$
+\end{definicion}
+
+En cuanto a la independencia de sucesos podemos dar dos definiciones de independencia:
+
+\begin{definicion}
+	Decimos que los eventos $B = (B_1 , ... , B_p)$ son independientes dos a dos si para todos $m\neq k$ se tiene que $P(B_m \bigcap B_k) = P(B_m)P(B_k)$
+\end{definicion}
+
+\begin{definicion}
+	Se dice que los eventos $B = (B_1 , ... , B_p)$ son independientes mutuamente si para todo $k\leq p$ se tiene que $P(\bigcap_{i=1}^{k}B_i) = \prod_{i=1}^{k}(B_i)$
+\end{definicion}
+
+En cuanto a la definición de independencia entre las variables aleatorias que definen un vector aleatorio podemos dar dos caracterizaciones basadas en la función característica.
+
+\begin{proposicion}
+	Si las componentes del vector aleatorio $X = (X_1 , ... , X_p)$ son independientes entonces:
+	
+	$$\Phi_{\underline{X}}(\underline{t}) = E[e^{i\underline{t}\underline{X}}] = \prod_{j=1}^{p}E[e^{it_j X_j}]$$
+\end{proposicion}
+
+\begin{proposicion}
+	Si las componentes del vector aleatorio $X = (X_1 , ... , X_p)$ son independientes entonces la función característica de la variable $Y = \sum_{j=1}^{p}X_j$ es:
+	
+	$$\Phi_Y (t) = E[e^{itY}] = E[e^{it \sum_{j=1}^{p}X_j}] = \prod_{j=1}^{p}\Phi_{X_j} (t)$$
+\end{proposicion}
