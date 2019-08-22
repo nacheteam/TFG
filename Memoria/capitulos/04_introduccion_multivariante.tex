@@ -255,4 +255,105 @@ Vamos a hacer la demostración de las 4 propiedades para dar así una pincelada 
 	\end{enumerate}
 \end{demostracion}
 
-Ya hemos dado las definiciones y propiedades de probabilidad y esperanza condicionadas, ahora vamos a continuar avanzando con las distribuciones marginales y conjuntas.
+Ya hemos dado las definiciones y propiedades de probabilidad y esperanza condicionadas, para finalizar vamos a ver algunas desigualdades famosas que utilizaremos y sus demostraciones.
+
+\subsection{Desigualdades y fórmulas famosas}
+
+\begin{teorema}[Desigualdad de Markov]
+	Sea $X$ una variable aleatoria que toma valores no negativos. Entonces para cualquier constante $\alpha$ satisfaciendo $E[X]<\alpha$ se cumple que:
+	
+	$$P(X>\alpha) \leq \frac{E[X]}{\alpha}$$
+\end{teorema}
+
+\begin{demostracion}
+	Denotemos como $f_{X}(x)$ la función de densidad de la variable aleatoria $X$. Entonces tenemos:
+	
+	$$E[X] = \int_{x}x f_{X}(x)dx = \int_{0\leq x\leq \alpha}xf_{X}(x)dx + \int_{x>\alpha}xf_{X}(x) dx$$
+	
+	$$\geq \int_{x>\alpha}xf_{X}(x)dx \geq \int_{x>\alpha}\alpha f_{X}(x)dx$$
+	
+	La primera de las desigualdades se sigue de la no negatividad de $X$ y la segunda se sigue de que la integral está definida sobre los puntos en los que $x>\alpha$, de hecho:
+	
+	$$\int_{x>\alpha}\alpha f_{X}(x)dx = \alpha P(X>\alpha)$$
+	
+	Con lo que tenemos finalmente que:
+	
+	$$E[X]\geq \alpha P(X>\alpha) \Leftrightarrow P(X>\alpha) \leq \frac{E[X]}{\alpha}$$ \QEDA
+\end{demostracion}
+
+\begin{teorema}[Desigualdad de Chebychev]
+	Sea $X$ una variable aleatoria arbitraria. Entonces para cualquier constante $\alpha$ se tiene que:
+	
+	$$P(|X - E[X]|>\alpha)\leq \frac{Var[X]}{\alpha^2d}$$
+\end{teorema}
+
+\begin{demostracion}
+	Sabemos que la desigualdad $|X-E[X]|>\alpha$ es cierta si y sólo si $|X-E[X]|^2 > \alpha^2$
+	
+	Vamos a definir la variable aleatoria $Y = (X-E[X])^2$ es es no negativa. Con esta definición se tiene que $E[Y] = Var[X]$ por la propia definición de la variable aleatoria $Y$.
+	
+	Entonces la parte izquierda de la desigualdad del teorema se puede expresar como $P(|X - E[X]|>\alpha) = P(Y>\alpha^2)$. Aplicando aquí la desigualdad de Markov obtenemos que:
+	
+	$$P(Y>\alpha^2) \leq \frac{E[Y]}{\alpha^2} = \frac{Var[X]}{\alpha^2}$$ \QEDA
+\end{demostracion}
+
+\begin{teorema}[Cota inferior de Chernoff]
+	Sea $X$ una variable aleatoria que se puede expresar como la suma de $N$ variables aleatorias independiente de Bernoulli, cada una tomando el valor $1$ con probabilidad $p_i$.
+	
+	$$X = \sum_{i=1}^{N}X_i$$
+	
+	Entonces para todo $\delta \in (0,1)$ tenemos que:
+	
+	$$P(X<(1-\delta)E[X])<e^{-E[X]\delta^2 /2}$$
+\end{teorema}
+
+\begin{teorema}[Cota superior de Chernoff]
+	Sea $X$ una variable aleatoria que se puede expresar como la suma de $N$ variables aleatorias independiente de Bernoulli, cada una tomando el valor $1$ con probabilidad $p_i$.
+	
+	$$X = \sum_{i=1}^{N}X_i$$
+	
+	Entonces para todo $\delta \in (0,2\cdot e -1)$ tenemos que:
+	
+	$$P(X>(1+\delta)E[X])<e^{-E[X]\delta^2 /2}$$
+\end{teorema}
+
+Ambas cotas disponen de una demostración que no es constructiva, por lo que no es relevante su demostración para el estudio. Como ejemplo de una demostración de un estilo similar haremos la demostración de la siguiente desigualdad.
+
+
+\begin{teorema}[Desigualdad de Hoeffding]
+	Sea $X$ una variable aleatoria que se puede expresar como suma de $N$ variables aleatorias independientes acotadas en intervalos $[l_i , u_i]$.
+	
+	$$X = \sum_{i=1}^{N}X_i$$
+	
+	Entonces para todo $\theta >0$ se tienen las cotas:
+	
+	$$P(X - E[X] > \theta) \leq e^{- \frac{2\theta^2}{\sum_{i=1}^{N}(u_i - l_i)^2}}$$
+	
+	$$P(E[X] - X > \theta) \leq e^{- \frac{2\theta^2}{\sum_{i=1}^{N}(u_i - l_i)^2}}$$
+\end{teorema}
+
+\begin{demostracion}
+	Sólo haremos la demostración de la primera desigualdad de forma resumida y sin entrar en los detalles más complejos que se alejan del interés del estudio.
+	
+	En primer lugar debemos probar que para todo $t\geq 0$ se cumple la desigualdad:
+	
+	$$P(X - E[X]>\theta) = P(e^{t(X - E[X])}>e^{t\theta})$$
+	
+	Usando la desigualdad de Markov podemos probar que $P(e^{t(X-E[X])}>e^{t\theta})$ es como mucho $E[e^{(X-E[X])}]e^{-t\theta}$.
+	
+	Además al ser variables aleatorias independientes las que componen la variable aleatoria $X$ podemos descomponer el término teniendo la desigualdad:
+	
+	$$P(X - E[X]>\theta)\leq e^{-t\theta}\prod_{i}E[e^{t(X_i - E[X_i])}]$$
+	
+	Cada uno de los términos de este producto se puede probar que vale como mucho $e^{t^2(u_i - l_i)/8}$ usando argumentos de convexidad y el Teorema de Taylor.
+	
+	Por tanto se cumple:
+	
+	$$P(X-E[X]>\theta)\leq e^{-t\theta}\prod_{i}e^{t^2(u_i - l_i)^2 / 8}$$
+	
+	Nos interesa hallar el valor de $t=t^*$ que ajusta la desigualdad. Puede demostrarse que ese valor es:
+	
+	$$t^* = \frac{4\theta}{\sum_{i=1}^{N}(u_i - l_i)^2}$$
+	
+	Sustituyendo en la desigualdad con este valor de $t$ tenemos el resultado que queríamos probar. \QEDA
+\end{demostracion}

@@ -28,6 +28,7 @@
 % Math style letters
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 \usepackage{longtable}
 
@@ -101,6 +102,9 @@ pdfproducer = {pdflatex}
 \newtheorem{propiedades}{Propiedades}[chapter]
 \newtheorem{ejemplo}{Ejemplo}[chapter]
 \newtheorem{definicion}{Definición}[chapter]
+
+\newcommand*{\QEDA}{\hfill\ensuremath{\blacksquare}}%
+\newcommand*{\QEDB}{\hfill\ensuremath{\square}}%
 
 \definecolor{gray97}{gray}{.97}
 \definecolor{gray75}{gray}{.75}
