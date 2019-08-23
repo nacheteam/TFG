@@ -1,0 +1,56 @@
+\chapter{Modelos implementados}
+\label{chapter:modelos}
+
+En este capítulo vamos a repasar qué modelos he implementado y cómo funcionan cada uno de ellos. Primero se hará una revisión teórica de los modelos y posteriormente un análisis breve del código explicando las particularidades de las implementaciones.
+
+\section{Algoritmos de ensamblaje}
+
+Los algoritmos que he implementado pertenecen a una familia concreta de algoritmos de detección de anomalías denominados como algoritmos de ensamblaje o ``Ensemble Algorithms'' en inglés. Estos algoritmos son lo equivalente a los meta-algoritmos pero destinados a la detección de anomalías. Para dar una mejor definición de qué son los algoritmos de ensamblaje vamos a introducir una clasificación de los mismos para dar las categorías que entran dentro de esta definición.
+
+\begin{itemize}
+	\item Algoritmos de ensamblaje secuenciales: En este tipo de algoritmos tenemos un algoritmos base o un conjunto de algoritmos base que se aplican de forma secuencial, de forma que las primeras ejecuciones se ven usadas o modificadas por ejecuciones futuras de algoritmos. Finalmente el resultado puede ser una combinación ponderada de las valoraciones de los algoritmos o el resultado del último de ellos.
+	
+	
+	\begin{algorithm}[H]{\textbf{Ensamblaje secuencial:}}
+		\SetAlgoLined
+		
+		\textbf{Entrada: } Conjunto de datos $\mathcal{D}$, Algoritmos base $\mathcal{A}_1 , ... , \mathcal{A}_r$
+		
+		j=1
+		
+		\Repeat{fin}{
+			Tomamos el algoritmo $\mathcal{A}_j$ según los resultados anteriores
+			
+			Tomamos el conjunto de datos modificado $f_j (\mathcal{D})$ de anteriores ejecuciones
+			
+			Ejecutamos el algoritmo $\mathcal{A}_j$ sobre $f_j (\mathcal{D})$
+			
+			j=j+1
+			
+		}
+	
+		\KwResult{Combinación de los resultados}
+	\end{algorithm}
+	\item Algoritmos de ensamblaje independientes: En este caso se emplean o bien diferentes instancias del mismo algoritmo o bien diferentes porciones de los datos que se emplearán de forma distinta. Se puede variar la instanciación por ejemplo dependiendo del subespacio sobre el que queramos ejecutarlo o dependiendo de las características de una porción concreta de los datos.
+	
+	\begin{algorithm}[H]{\textbf{Ensamblaje independiente:}}
+		\SetAlgoLined
+		
+		\textbf{Entrada: } Conjunto de datos $\mathcal{D}$, Algoritmos base $\mathcal{A}_1 , ... , \mathcal{A}_r$
+		
+		j=1
+		
+		\Repeat{fin}{
+			Tomamos el algoritmo $\mathcal{A}_j$
+			
+			Creamos el conjunto de datos modificado $f_j (\mathcal{D})$
+			
+			Ejecutamos el algoritmo $\mathcal{A}_j$ sobre $f_j (\mathcal{D})$
+			
+			j=j+1
+			
+		}
+		
+		\KwResult{Combinación de los resultados}
+	\end{algorithm}
+\end{itemize}
