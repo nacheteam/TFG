@@ -90,7 +90,7 @@ El método Mahalanobis Kernel intenta tener este mismo comportamiento en dos pas
 
 Vamos a describir el funcionamiento del algoritmo, pero primero vamos a introducir notación. Vamos a llamar $D$ a la matriz de datos que está centrada en la media y que tiene dimensiones $n\times d$, es decir, tenemos $n$ instancias u objetos de dimensionalidad $d$.
 
-\begin{algorithm}{\textbf{Mahalanobis Kernel}}
+\begin{algorithm}[H]{\textbf{Mahalanobis Kernel}}
 	\caption{Mahalanobis Kernel}
 	\label{mahalanobis_kernel}
 	\KwIn{$D$}
@@ -279,3 +279,263 @@ def runMethod(self):
 Todos los módulos tienen una función parecida. En primer lugar se inicializan las puntuaciones y se repite el mismo proceso de cálculo 100 veces. Se inicializa el modelo y se ajusta con una muestra de tamaño en el intervalo $[50,1000]$. Por último se hace la media de todos los cálculos y se estandarizan con la librería Sklearn.
 
 En la función principal ``runMethod'' se ejecutan los tres módulos y se hace la media de las puntuaciones.
+
+\section{OUTRES}
+
+Este método entra dentro del segundo de los tipos que hemos visto en la clasificación inicial pues el objetivo es analizar los datos por subespacios. Una de las cosas que podremos ver al final cuando hagamos el estudio de los resultados es lo costoso de estos métodos, siendo este el primero que nos va a servir de ejemplo para visualizar este problema.
+
+En primer lugar cabe decir que en el resto de algoritmos las puntuaciones reflejan el factor de anomalía en orden creciente, es decir, a mayor puntaje más anómalo es el dato y a menor puntaje menos anómalo se dice que es.
+
+En este caso los puntajes van a estar en el intervalo $[0,1]$ siendo $0$ un puntaje para un dato lo más anómalo posible y $1$ un puntaje para un dato lo más normal posible. Daremos razones para que esto sea así cuando veamos el algoritmo.
+
+\begin{algorithm}[H]{\textbf{OUTRES}}
+	
+	\KwIn{o: instancia, S: subespacio}
+	
+	\ForEach{$i\in (D \setminus S)$}{
+	
+		$S' = S\cup \{ i \}$
+		
+		\If{$S'$ es relevate}{
+			
+			$den(o, S') = \frac{1}{n} \sum_{p\in AN(o,S')} K_e (\frac{dist_{S'}(o,p)}{\epsilon (|S'|)})$
+			
+			$dev(o,S') = \frac{\mu - den(o,S')}{2\sigma}$
+			
+			\If{$dev(o,S')\geq 1$}{
+				
+				$r(o) = r(o) \cdot \frac{den(o,S')}{dev(o,S')}$
+				
+			}
+		
+			$OUTRES(o,S')$
+			
+		}
+	
+		\Else{
+		
+			Para recursividad
+		
+		}
+
+	}
+	
+	\KwOut{r: puntajes}
+	
+	\caption{OUTRES}
+	\label{outres}
+\end{algorithm}
+
+En primer lugar tenemos que definir qué son los espacios relevantes. Decimos que un subespacio $S$ es relevante si la proyección sobre ese subespacio no está distribuida de uniformemente. No podemos hacer un test de que toda la proyección esté distribuida uniformemente por lo que nos vamos a valer del siguiente teorema:
+
+\begin{teorema}
+	Sea $S$ un subespacio del conjunto de datos. Si $S$ está distribuido uniformemente entonces $\forall s_i \in S$ tenemos que la proyección uno-dimensional del conjunto de datos sobre $s_i$ está distribuida uniformemente.
+\end{teorema}
+
+Este teorema nos da la siguiente herramienta: si comprobamos que ninguna proyección uno-dimensional está distribuida uniformemente entonces podemos afirmar que $S$ está distribuido uniformemente. Para hacer estas comprobaciones uno-dimensionales lo hemos hecho mediante el test de Kolmogorov-Smirnov. 
+
+Además el algoritmo incorpora un nuevo concepto. Los datos tienen mayor relevancia cuando los consideramos en subespacios y cuando los metemos dentro de lo que los autores llaman vecindarios adaptativos. La definición de un vecindario adaptativo es la siguiente:
+
+\begin{definicion}
+	Definimos para la instancia u objeto $o$ en el subespacio $S$ su vecindario adaptativo como:
+	
+	$$AN(o,S) = \{ p | dist_{S}(o,p)\leq \epsilon (|S|) \}$$
+\end{definicion}
+
+Donde $dist_{S}$ es la función distancia sobre los atributos $S$. Aquí tenemos una distancia máxima definida en función del cardinal del subespacio que viene dada de la siguiente forma:
+
+$$\epsilon (|S|) = 0.5 \cdot \frac{h_{optimal}(|S|)}{h_{optimal}(2)}$$
+
+Donde:
+
+$$h_{optimal} (d) = (\frac{8\Gamma (\frac{d}{2} + 1)}{\pi^{\frac{d}{2}}}(d+4)(2\sqrt{\pi})^d) n^{\frac{-1}{d+4}}$$
+
+Donde $\Gamma$ denota la función gamma y $n$ es el tamaño del conjunto de datos, es decir, el número de objetos o instancias.
+
+Con esto ya tenemos la definición del vecindario adaptativo y el objeto de tenerlo es poder comprobar que el la instancia $o$ es relevante en el subespacio $S$ dentro de su vecindario adaptativo.
+
+En cuanto a la definición de densidad tenemos la función $K_{\epsilon}$ que es el llamado Kernel de Epachenikov. Esta función está definida como:
+
+$$K_{\epsilon}(x) = (1-x^2) \ \forall x<1$$
+
+En cuanto al $\mu$ y $\sigma$ que aparecen en el cálculo de la desviación son la media y la desviación típica de las densidades en el vecindario adaptativo de $o$ en el subespacio $S$. Por tanto con la desviación estamos midiendo cómo de alejada está la instancia $o$ en densidad respecto del resto de las instancias de su vecindario adaptativo. Si esta densidad es mayor a dos desviaciones típicas entonces $dev(o,S')$ será mayor que $1$ y por tanto estaremos ante un dato anómalo.
+
+Si este es el caso, al estar los puntajes de anomalías inicializados a 1 podemos actualizarlo multiplicando por un valor menor estricto que 1. En este caso este valor es $\frac{den(o,S')}{dev(o,S')}$. Como este valor es menor que 1 reducirá el puntaje y lo acercará más a una anomalía. De esta forma cuantas más veces se actualize su puntaje y cuanto menor puntaje obtenga con $\frac{den(o,S')}{dev(o,S')}$ más anómalo consideraremos el dato.
+
+Finalmente si el subespacio era relevante significa que aún podemos aumentar más la dimensionalidad pues puede que nos queden subespacios de mayor orden que sigan sin estar distribuidos según una uniforme.
+
+Como dato cabe decir que el algoritmo empieza en dimensión 2 y no en dimensión 1 pues en una única dimensión no tiene sentido estudiar la densidad ya que no vamos a sacar información de calidad.
+
+Veamos la implementación
+
+\begin{lstlisting}[language=Python]
+def isRelevantSubspace(self, subspace, neighborhood):
+	'''
+	@brief Function that tells if a subspace is relevant, this is that the projection
+	of the dataset over the subspace is not distributed uniformly in the neighborhood
+	@param self
+	@param subspace Subspace to check
+	@param neighborhood neighborhood in which to check the projection
+	@return It returns True if the subspace is relevant, False in other case.
+	'''
+	''' We check first if we have already considered this subspace. If so, it is not relevant anymore.'''
+	for sub in self.checked_subspaces:
+		if len(np.intersect1d(sub, subspace))==len(subspace):
+			return False
+
+	''' Make the projection'''
+	projection = self.dataset[:,subspace][neighborhood]
+	if len(projection)==0:
+		return False
+	''' We check for each subspace if the 1-dimensional data is uniformly distributed'''
+	for i in range(len(subspace)):
+		min = np.amin(projection[:,i].reshape(-1))
+		max = np.amax(projection[:,i].reshape(-1))
+		''' We do it using the Kolmogorov-Smirnov test'''
+		d,p = kstest(projection[:,i], "uniform", args=(min, max-min))
+		''' If the null hypothesis is not rejected, this means the data follow a uniform distribution'''
+		if p<=self.alpha:
+			return False
+	return True
+
+def computeHOptimal(self, d):
+	'''
+	@brief Function that calculates the Hoptimal
+	@param self
+	@param d Parameter, usually the dimensionality of the subspace
+	@return It returns a numerical value.
+	'''
+	f1 = (8*gamma(d/2 + 1))/(np.power(np.pi, d/2))
+	f2 = d+4
+	f3 = np.power(2*np.sqrt(np.pi),d)
+	n = len(self.dataset)
+	f4 = np.power(n, -1/(d+4))
+	return f1*f2*f3*f4
+
+def computeEpsilon(self, subspace):
+	'''
+	@brief Function to compute the epsilon of the adapatative neighborhood
+	@param self
+	@params subspace Subspace considered to compute the epsilon
+	@return It returns a numerical value
+	'''
+	return 0.5*(self.computeHOptimal(len(subspace))/self.computeHOptimal(2))
+
+def computeNeighborhood(self, subspace, instance):
+	'''
+	@brief This function computes the adaptative neighborhood
+	@param subspace Subspace in which to compute the neighborhood
+	@param instance Instance considered as the centroid of the neighborhood (index of the element)
+	@return It returns a numpy array containing the indexes of the neighborhood
+	'''
+	# First we compute the projection
+	projection = self.dataset[:,subspace]
+	# We compute a numpy array of the distances of all the elements to the instance
+	tile = np.tile(projection[instance], len(self.dataset)).reshape((len(self.dataset),len(projection[instance])))
+	distances = np.linalg.norm(projection-tile, axis=1)
+	# We keep only the ones that are close enough (epsilon distance as max)
+	neighborhood = np.where(distances<self.epsilons[len(subspace)])[0]
+	# We exclude the instance itself
+	return neighborhood[neighborhood!=instance]
+
+def computeKernel(self, x):
+	'''
+	@brief Function that computes the Epanechnikov kernel with scalar factor 1
+	@param self
+	@param x Number between 0 and 1.
+	@return It returns a numerical value
+	'''
+	return 1-np.power(x,2)
+
+def computeDensity(self, subspace, neighborhood, instance):
+	'''
+	@brief This is the function that computes the density
+	@param self
+	@param subspace Subspace in which to compute the density
+	@param neighborhood Adaptative neighborhood for the instance in the subspace
+	@param instance Index of the instance considered at the moment
+	@return It return a numerical value.
+	'''
+	# Compute the projection
+	projection = self.dataset[:,subspace]
+	# Compute the density
+	tile = np.tile(projection[instance], len(self.dataset)).reshape((len(self.dataset),len(projection[instance])))
+	return np.sum(self.computeKernel(np.linalg.norm(projection-tile, axis=1))/self.computeEpsilon(subspace))/len(self.dataset)
+
+def computeDeviation(self, subspace, neighborhood, instance, density):
+	'''
+	@brief Function that computes the deviation
+	@param self
+	@param subspace Subspace considered to compute the deviation
+	@param neighborhood Adaptative neighborhood for the instance in the subspace
+	@param instance Instance to compute the deviation
+	@param density Density value of the instance
+	@return It returns a numerical value
+	'''
+	''' First we need to compute the density for all the neighbors'''
+	densities = np.array([])
+	for neig in neighborhood:
+		local_neigborhood = self.computeNeighborhood(subspace, neig)
+		densities = np.append(densities,self.computeDensity(subspace, local_neigborhood, neig))
+	''' We compute the mean and the standard deviation'''
+	mean = np.mean(densities)
+	stdv = np.std(densities)
+	''' Return the deviation'''
+	return (mean-density)/(2*stdv)
+
+def outres(self, instance, subspace):
+	'''
+	@brief Main loop of the outres algorithm
+	@param self
+	@param instance Instance to compute the outres score
+	@param subspace Initial subspace of dimension 1
+	'''
+	''' First we compute the indexes of the features that are not used in the actual subspace'''
+	available_indexes = list(set(list(range(len(self.dataset[0])))).difference(set(list(subspace))))
+	''' For each available index we are going to check'''
+	for index in available_indexes:
+		''' We make the new subspace adding the index'''
+		new_subspace = np.append(subspace, int(index)).astype(int)
+		''' We compute the adaptative neighborhood'''
+		neighborhood = self.computeNeighborhood(new_subspace, instance)
+		''' If the subspace is relevant'''
+		if self.isRelevantSubspace(new_subspace, neighborhood):
+			''' Compute the density and deviation'''
+			density = self.computeDensity(new_subspace, neighborhood, instance)
+			deviation = self.computeDeviation(new_subspace, neighborhood, instance, density)
+			''' If it is a high deviating instance in the subspace then we update the score'''
+			if deviation>=1:
+				if self.verbose:
+					print("The instance " + str(instance+1) + " is outlying in the subspace " + str(new_subspace))
+				''' The scores are equal to 1 at first and 1 means no outlierness and 0 means very outlying'''
+				self.outlier_score[instance]*=density/deviation
+			''' We keep the process if the subspace was relevant'''
+			self.outres(instance, new_subspace)
+		''' We add the subspace to the considered ones'''
+		self.checked_subspaces.append(new_subspace)
+
+
+def runMethod(self):
+	'''
+	@brief This function is the actual implementation of OUTRES
+	'''
+	''' First we compute all epsilons so we dont need to make this calculation more than once'''
+	self.epsilons = [self.computeEpsilon(list(range(n))) for n in range(len(self.dataset[0])+1)]
+	
+	''' We initialize the scores to one'''
+	self.outlier_score = np.ones(len(self.dataset))
+	''' For each instance we run outres'''
+	for i in range(len(self.dataset)):
+		''' Erase checked_subspaces'''
+		self.checked_subspaces = []
+		if self.verbose and i%25==0:
+			print("Computing the instance " + str(i+1) + "/" + str(len(self.dataset)))
+		''' We run for each instance each index'''
+		for j in range(len(self.dataset[0])):
+			self.outres(i,np.array([j]))
+	''' At the end, score 1 means no outlierness and 0 100% outlier. We make 1-score
+	so we can keep the ascending order and now this will mean that 0 is no outlierness
+	and 1 is very outlying.'''
+	self.outlier_score = np.ones(len(self.dataset))-self.outlier_score
+	self.calculations_done=True
+\end{lstlisting}
