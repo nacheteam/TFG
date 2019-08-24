@@ -123,37 +123,159 @@ Veamos ahora la implementación en Python.
 
 \begin{lstlisting}[language=Python]
 def runMethod(self):
-'''
-@brief Function that executes the Kernel Mahalanobis method. The results are
-stored on the variable self.scores
-@param self
-'''
-''' Compute the S matrix of the algorithm'''
-S = np.dot(self.dataset, self.dataset.T)
-''' Now we diagonalize it'''
-Q,delta_sq,Qt = np.linalg.svd(S)
-del S
-del Qt
-''' Obtain delta as matrix'''
-delta = np.matrix(np.diag(np.sqrt(delta_sq)))
-del delta_sq
-Q = np.matrix(Q)
-''' Compute de D' matrix and normalize it'''
-Dprime = np.dot(Q,delta)
-del Q
-del delta
-Dp_std = scale(Dprime, axis=1)
-del Dprime
-''' We compute its mean on the rows to compute the deviation as the score'''
-mean = Dp_std.mean(axis=0)
-self.outlier_score=[]
-''' The score is the euclidean distance to the mean'''
-for i in range(len(Dp_std)):
-self.outlier_score.append(np.linalg.norm(mean-Dp_std[i])**2)
-self.outlier_score = np.array(self.outlier_score)
-self.calculations_done=True
+	'''
+	@brief Function that executes the Kernel Mahalanobis method. The results are
+	stored on the variable self.scores
+	@param self
+	'''
+	''' Compute the S matrix of the algorithm'''
+	S = np.dot(self.dataset, self.dataset.T)
+	''' Now we diagonalize it'''
+	Q,delta_sq,Qt = np.linalg.svd(S)
+	del S
+	del Qt
+	''' Obtain delta as matrix'''
+	delta = np.matrix(np.diag(np.sqrt(delta_sq)))
+	del delta_sq
+	Q = np.matrix(Q)
+	''' Compute de D' matrix and normalize it'''
+	Dprime = np.dot(Q,delta)
+	del Q
+	del delta
+	Dp_std = scale(Dprime, axis=1)
+	del Dprime
+	''' We compute its mean on the rows to compute the deviation as the score'''
+	mean = Dp_std.mean(axis=0)
+	self.outlier_score=[]
+	''' The score is the euclidean distance to the mean'''
+	for i in range(len(Dp_std)):
+		self.outlier_score.append(np.linalg.norm(mean-Dp_std[i])**2)
+	self.outlier_score = np.array(self.outlier_score)
+	self.calculations_done=True
 \end{lstlisting}
 
 La implementación del algoritmo se ha realizado en Python como el resto del proyecto y posteriormente se explicará en detalle cómo se ha organizado.
 
 El algoritmo basa su implementación en la librería NumPy.
+
+\section{TRINITY}
+
+Este algoritmo es del segundo tipo que vimos al principio cuando hicimos una categorización de los algoritmos de ensamblaje, en concreto el algoritmo hace una combinación de tres componentes distintos. La intención de hacer esta composición de modelos es intentar obtener todos los tipos de anomalías que se puedan del conjunto y que reciban una puntuación acorde. La teoría nos dice que esta combinación de modelos nos va a proveer de un resultado más robusto que el uso de modelos aislados como discutiremos en la sección de resultados.
+
+En concreto este algoritmo consta de tres componentes distintos:
+
+\begin{itemize}
+	\item Componente basado en distancias: este componente consta de un algoritmo que base u comportamiento en técnicas de agrupamiento o valoración por distancias como por ejemplo es el método clásico KNN. Este método lo que hace es tomar los k vecinos más cercanos y colocar como puntaje de anomalía para esa instancia como la suma de estas distancias. De esta forma los puntos que más alejados estén del resto sumarán una mayor distancia y por tanto serán más anómalos. En concreto este modelo se ha utilizado con el valor $k=5$ y con una técnica de subsampling. La técnica de subsampling consiste en no utilizar todo el conjunto de datos en el algoritmo, si no particionarlo y utilizar una pequeña muestra repitiendo este proceso y haciendo la media de las ejecuciones. De esta forma conseguimos una reducción de la varianza. Esto conlleva algunas ventajas como discutimos en la sección de sesgo y varianza anteriormente. En concreto la técnica toma 1000 particiones, ejecuta el algoritmo sobre ellas y hace la media.
+	\item Componente basado en dependencia: este componente toma un algoritmo como el que hemos implementado (Mahalanobis Kernel). En este componente vamos a intentar detectar las anomalías que corresponden a datos que no siguen las relaciones entre atributos que sí tienen el resto de los objetos. Para ello he utilizado en este componente el algoritmo Mahalanobis Kernel que ya hemos explicado anteriormente incorporando la técnica de subsampling.
+	\item Componente basado en densidad en subespacios: en este componente vamos a incorporar un modelo que intente buscar anomalías que lo sean en base a la densidad que tienen en alguno de los subespacios de los datos. Este hecho no nos debe ser ajeno pues es la segunda de las definiciones que hemos visto de anomalía y que hacía referencia a la función de densidad y los subespacios incorrelados y correlados. En concreto para este componente he utilizado el algoritmo IForest o Isolation Forest. Este algoritmo lo que hace es tomar de forma aleatoria un atributo y se van particionando los valores del mismo en una estructura de árbol, es decir, dividimos los datos en aquellos con un valor superior al marcado para el atributo y con un valor menor. De esta forma podemos medir cuántos pasos o lo que es lo mismo qué profundidad ha alcanzado nuestro árbol hasta llegar a dividir un objeto del resto de los datos. Este algoritmo también incorpora la técnica de subsampling.
+\end{itemize}
+
+Por último con esto hemos obtenido tres vectores o listas con la puntuación que cada componente nos ha arrojado para cada instancia. Para hacerlos comparables lo que debemos hacer es estandarizar los datos a media cero y varianza unitaria. Finalmente se realiza la media de los tres vectores de puntaje siendo esta la puntuación final devuelta por TRINITY.
+
+Veamos la implementación de este algoritmo:
+
+\begin{lstlisting}[language=Python]
+def distanceBased(self):
+	'''
+	@brief Function that implements the distance based component
+	@param self
+	@return It returns the vector with the scores of the instances
+	'''
+	''' Initialize the scores'''
+	scores = np.array([0]*len(self.dataset)).astype(float)
+	for i in range(self.num_iter):
+		knn = KNN(n_neighbors=5, contamination=self.contamination)
+		''' Number in the interval [50, 1000]'''
+		subsample_size = np.random.randint(50, 1001)
+		sample = []
+		if subsample_size>=len(self.dataset):
+			sample = list(range(len(self.dataset)))
+		else:
+			''' Take the sample and train the model'''
+			sample = np.random.choice(len(self.dataset), size=subsample_size, replace=False)
+		knn.fit(self.dataset[sample])
+		''' Update the score to compute the mean'''
+		scores[sample]+=knn.decision_scores_
+	''' Return the mean'''
+	scores = scores/self.num_iter
+	scores = scale(scores)
+	return scores
+
+def dependencyBased(self):
+	'''
+	@brief Function that implements the dependency based component
+	@param self
+	@return It returns the vector with the scores of the instances
+	'''
+	''' Initialize the scores'''
+	scores = np.array([0]*len(self.dataset)).astype(float)
+	for i in range(self.num_iter):
+		kernel_mahalanobis = KernelMahalanobis(contamination=self.contamination)
+		''' Number in the interval [50, 1000]'''
+		subsample_size = np.random.randint(50, 1001)
+		sample = []
+		if subsample_size>=len(self.dataset):
+			sample = list(range(len(self.dataset)))
+		else:
+			''' Take the sample and train the model'''
+			sample = np.random.choice(len(self.dataset), size=subsample_size, replace=False)
+		kernel_mahalanobis.fit(self.dataset[sample])
+		''' Update the score to compute the mean'''
+		scores[sample]+=kernel_mahalanobis.outlier_score
+	''' Return the mean'''
+	scores = scores/self.num_iter
+	scores = scale(scores)
+	return scores
+
+def densityBased(self):
+	'''
+	@brief Function that implements the dependency based component
+	@param self
+	@return It returns the vector with the scores of the instances
+	'''
+	''' Initialize the scores'''
+	scores = np.array([0]*len(self.dataset)).astype(float)
+	for i in range(self.num_iter):
+		iforest = IForest(contamination=self.contamination, behaviour="new")
+		''' Number in the interval [50, 1000]'''
+		subsample_size = np.random.randint(50, 1001)
+		sample = []
+		if subsample_size>=len(self.dataset):
+			sample = list(range(len(self.dataset)))
+		else:
+			''' Take the sample and train the model'''
+			sample = np.random.choice(len(self.dataset), size=subsample_size, replace=False)
+		iforest.fit(self.dataset[sample])
+		''' Update the score to compute the mean'''
+		scores[sample]+=iforest.decision_scores_
+	''' Return the mean'''
+	scores = scores/self.num_iter
+	scores = scale(scores)
+	return scores
+
+def runMethod(self):
+	'''
+	@brief This function is the actual implementation of TRINITY
+	@param self
+	'''
+	''' Distance module'''
+	if self.verbose:
+		print("Obtaining scores with the distance module")
+	distance_based = self.distanceBased()
+	''' dependency module'''
+	if self.verbose:
+		print("Obtaining scores with the dependency module")
+	dependency_based = self.dependencyBased()
+	''' Density module'''
+	if self.verbose:
+		print("Obtaining scores with the density module")
+	density_based = self.densityBased()
+	
+	''' Compute the mean of the three modules'''
+	self.outlier_score=(distance_based + dependency_based + density_based)/3
+	self.calculations_done=True
+\end{lstlisting}
+
+Todos los módulos tienen una función parecida. En primer lugar se inicializan las puntuaciones y se repite el mismo proceso de cálculo 100 veces. Se inicializa el modelo y se ajusta con una muestra de tamaño en el intervalo $[50,1000]$. Por último se hace la media de todos los cálculos y se estandarizan con la librería Sklearn.
+
+En la función principal ``runMethod'' se ejecutan los tres módulos y se hace la media de las puntuaciones.
