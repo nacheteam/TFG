@@ -828,3 +828,165 @@ def runMethod(self):
 	''' Marks the calculations as done'''
 	self.calculations_done=True
 \end{lstlisting}
+
+\section{LODA}
+
+LODA es un algoritmo que entra en la categoría de los algoritmos que involucran histogramas. Aún no hemos visto ningún algoritmo de este tipo, por lo que no hemos discutido el funcionamiento de estos algoritmos. Cuando hacemos un histograma de los datos estudiamos la distribución de probabilidad de los datos y por tanto podemos ver si éstos están en las colas en algún atributo o proyección o si están en el centro de la distribución. Con esto podemos saber si el dato es o no anómalo. En concreto LODA emplea una serie de proyecciones uno-dimensionales sobre las que se estudia la distribución. 
+
+En primer lugar vamos a ver cómo se obtienen los vectores que nos dan las proyecciones uno-dimensionales.
+
+\begin{algorithm}[H]{\textbf{ProyeccionesAleatorias}}
+	
+	\KwIn{$d$: dimension, $D$: dataset, $k$: número de histogramas y proyecciones}
+	
+	$no\_neg = [\sqrt{d}]$
+	
+	$proyecciones = [ \ ]$
+	
+	\ForEach{$i\in [1,k]$}{
+	
+		$ind = $ $no\_neg$ indices aleatorios en $[0,d]$
+		
+		$proy = $ vector con ceros en todas las posiciones menos en ind, donde hay valores sacados de una normal $\mathcal{N}(0,1)$
+		
+		$proyecciones = [proecciones, proy]$
+
+	}
+	
+	\KwOut{$proyecciones$: proyecciones}
+	
+	\caption{ProyeccionesAleatorias}
+	\label{proyecciones_aleatorias}
+\end{algorithm}
+
+En LODA tenemos un parámetro $k$ que nos indica el número de proyecciones e histogramas que vamos a desarrollar. Esto nos va a dar más o menos muestras como haríamos con una técnica de subsampling tradicional. 
+
+Una vez que tenemos estos vectores de proyección vamos a ver cómo generamos los histogramas a partir de ellos.
+
+\begin{algorithm}[H]{\textbf{ObtenerHistogramas}}
+	
+	\KwIn{$D$: dataset, $\{w_i\}_{i=1}^{k}$: vectores de proyecciones, $k$: numero de histogramas y vectores de proyección}
+	
+	Inicializamos los histogramas $\{h_i\}_{i=1}^{k}$
+	
+	\For{$j=1 \rightarrow |D|$}{
+	
+		\For{$i=1\rightarrow k$}{
+		
+			$z_i = x_j^T w_i$	
+			
+			Actualiza el histograma $h_i$ con $z_i$
+
+		}
+
+	}
+	
+	\KwOut{$\{h_i\}_{i=1}^{k}$: histogramas}
+	
+	\caption{ObtenerHistogramas}
+	\label{obtener_histogramas}
+\end{algorithm}
+
+Con esto ya tenemos tanto las proyecciones como los histogramas, por lo que sólo queda ver cómo obtenemos las puntuaciones de anomalías de los datos.
+
+\begin{algorithm}[H]{\textbf{LODA}}
+	
+	\KwIn{$x$: instancia, $\{h_i\}_{i=1}^{k}$: histogramas, $\{w_i\}_{i=1}^{k}$: vectores de proyección}
+	
+	\For{$i=1\rightarrow k$}{
+	
+		$z_i = x^T w_i$
+		
+		Obtenemos $p_i = p_i (z_i)$ del histograma $h_i$
+
+	}
+
+	$f = \frac{-1}{k} \sum_{i=1}^{k}\log (p_i (z_i))$
+	
+	\KwOut{$f$: puntaje de anomalía de $x$}
+	
+	\caption{LODA}
+	\label{loda}
+\end{algorithm}
+
+Finalmente ya tenemos el algoritmo LODA completo. Cuando estamos evaluando una instancia obtenemos la probabilidad de que su proyección uno-dimensional ocurra. Con esta probabilidad si hacemos el logaritmo cuanto más cerca esté de $0$ más cerca estará el valor de $-\infty$ y por tanto mayor va a ser nuestro puntaje anómalo de dicha instancia.
+
+Ahora que ya tenemos el algoritmo completo vamos a ver la implementación:
+
+\begin{lstlisting}[language=Python]
+def getRandomProjections(self, dimension):
+	'''
+	@brief Function that computes and returns the random projections
+	@param self
+	@param dimension Dimensionality of the dataset (int)
+	@return It returns a list with numpy arrays as projections
+	'''
+	''' Number of non-negative elements in the projection'''
+	non_neg = int(np.ceil(np.sqrt(dimension)))
+	projections = []
+	''' We are going to compute k projections'''
+	for i in range(self.k):
+		''' Select non_neg random indexes to make the projection'''
+		ind = np.random.choice(dimension, replace=False, size=non_neg)
+		''' Initialize it to zeroes'''
+		proj = np.zeros(dimension)
+		''' The non-negative elements are drawn from a normal distribution'''
+		proj[ind]=np.random.normal(size=non_neg)
+		projections.append(proj)
+	return projections
+
+def getBin(self, hist_limits, value):
+	'''
+	@brief Function that given a value, it returns the bin it belongs to for the histogram
+	@param self
+	@param hist_limits Limits for each bin of the histogram
+	@param value Value to check for the bin
+	@return It returns the index corresponding to the bin
+	'''
+	bin=-1
+	for i in range(len(hist_limits)):
+		if value<hist_limits[i]:
+			bin=i
+			break
+	return bin-1
+
+def runMethod(self):
+	'''
+	@brief This is the implementation of the LODA algorithm
+	'''
+	''' We compute first all projections'''
+	random_projections = self.getRandomProjections(len(self.dataset[0]))
+	''' Initialize the histograms and the projected data'''
+	histograms = [[]]*self.k
+	Z = [[]]*self.k
+	''' For each instance of the dataset'''
+	for j in range(len(self.dataset)):
+		''' For each projection'''
+		for i in range(self.k):
+			''' Compute the 1D projection'''
+			Z[i].append(np.dot(self.dataset[j].T, random_projections[i]))
+	''' Compute the k histograms with the data'''
+	for i in range(self.k):
+		histograms[i]=np.histogram(Z[i], bins = self.n_bins)
+	
+	''' Initialize the scores to zero'''
+	self.outlier_score = np.array([0]*len(self.dataset)).astype(float)
+	''' For each instance'''
+	for i in range(len(self.dataset)):
+		prob = []
+		''' For each histogram'''
+		for j in range(self.k):
+			''' Compute the projection'''
+			z = np.dot(self.dataset[i].T, random_projections[j])
+			''' Check the bin for the projection'''
+			bin = self.getBin(histograms[j][1], z)
+			''' Obtain the probability linked to z in the histogram'''
+			prob.append(histograms[j][0][bin]/np.sum(histograms[j][0]))
+		prob = np.array(prob)
+		''' Compute the score with the probabilities'''
+		if 0. in prob:
+			self.outlier_score[i] = float("inf")
+		else:
+			self.outlier_score[i] = -np.sum(np.log(prob))/self.k
+	self.calculations_done=True
+\end{lstlisting}
