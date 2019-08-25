@@ -539,3 +539,292 @@ def runMethod(self):
 	self.outlier_score = np.ones(len(self.dataset))-self.outlier_score
 	self.calculations_done=True
 \end{lstlisting}
+
+\section{HICS}
+
+HICS es otra aproximación distinta al estudio por subespacios como ha sido el algoritmo OUTRES. OUTRES intenta encontrar un subespacio interesante en el vecindario de una instancia, es decir, para cada instancia se busca el subespacio interesante para dicha instancia y no tiene por qué ser interesante para ninguna más. Esta aproximación es la opuesta pues la intención es buscar subespacios que sean interesantes en general y hacer una valoración de los datos sobre dichos subespacios.
+
+Este algoritmo además pretende encontrar anomalías basándose en el concepto de densidad como introdujimos en la segunda definición de anomalía. Veamos primero el algoritmo en pseudocódigo para poder ir desgranándolo y explicarlo.
+
+\begin{algorithm}[H]{\textbf{HICS}}
+	
+	\KwIn{D: dataset}
+	
+	$scores = [ \ ]$
+	
+	$sub = $ subespacios de alto contraste
+	
+	\ForEach{$S \in sub$}{
+	
+		Ajustamos un modelo con el algoritmo LOF con la proyección sobre $S$
+		
+		$scores = scores + puntaje \ LOF$
+	
+	}
+
+	$scores = \frac{scores}{|sub|}$
+	
+	\KwOut{scores: puntajes}
+	
+	\caption{HICS}
+	\label{hics}
+\end{algorithm}
+
+Como podemos ver el objetivo de HICS es en primer lugar obtener una serie de subespacios que sean relevantes y que hemos llamado subespacios de alto contraste. Para cada uno de estos subespacios vamos a estudiar la proyección de los datos sobre estos subespacios y vamos a obtener una puntuación de las instancias con el modelo LOF. Finalmente hacemos la media de todos estos puntajes para obtener la puntuación final. 
+
+El modelo original está pensado para funcionar con LOF pero la teoría nos dice que podría funcionar con cualquier modelo basado en proximidad. Por tanto en la implementación desarrollada he incluido los modelos LOF, COF, CBLOF, LOCI, HBOS y SOD como alternativas entre las que elegir para la elección del modelo simple con el que obtener el puntaje.
+
+Veamos ahora el pseudocódigo con el que obtenemos el contraste de un subespacio.
+
+\begin{algorithm}[H]{\textbf{CalcularConstraste}}
+	
+	\KwIn{subespacio: subespacio, M: número de iteraciones del subsampling, $\alpha$: valor para obtener el tamaño de la muestra, $D$: conjunto de datos}
+	
+	$size = n \cdot \sqrt[|subespacio|]{\alpha}$
+	
+	$dev=0$
+	
+	\ForEach{$i\in [1,M]$}{
+	
+	$comp\_atr = aleatorio \ de \ subespacio$
+	
+	$sel\_obj = $ muestra aleatoria de $D$ de tamaño $size$
+	
+	$dev = dev + CalcularDev(comp\_atr, sel\_obj, subespacio, D)$
+	
+	}
+
+	$dev = \frac{dev}{M}$
+	
+	\KwOut{$dev$: contraste}
+	
+	\caption{CalcularConstraste}
+	\label{calcula_contraste}
+\end{algorithm}
+
+En resumen lo que vamos a ir haciendo es aplicar una técnica de subsampling en el algoritmo. Vamos a hacer $M$ ejecuciones para obtener el contraste tomando diferentes muestras de un tamaño fijado de antemano. Con estas muestras vamos a calcular la desviación del atributo de comparación $comp\_atr$ entre las instancias como vamos a ver ahora. Finalmente acumulamos toda esta desviación y obtenemos la media para ese subespacio. Con esto tenemos una medida de cuánto se desvían entre sí las instancias dentro de dicho subespacio.
+
+\begin{algorithm}[H]{\textbf{CalcularDev}}
+	
+	\KwIn{$comp\_atr$: atributo con el que comparar, $sel\_obj$: muestra seleccionada aleatoriamente, $subespacio$: subespacio sobre el que calcular la desviación, $D$: conjunto de datos}
+	
+	$max = 0$
+	
+	\ForEach{$d\in D$}{
+	
+		$cum_1 = \sum_{o\in D} o[comp\_atr]$ si $o[comp\_atr]<d[comp\_atr]$
+		
+		$cum_2 = \sum_{o\in sel\_obj} o[comp\_atr]$ si $o[comp\_atr]<d[comp\_atr]$
+		
+		$f_a = \frac{cum_1}{|D|}$
+		
+		$f_b = \frac{cum_2}{|D|}$
+		
+		$subs = |f_a - f_b|$
+		
+		\If{$subs>max$}{
+			
+			$max = subs$
+		
+		}
+	
+	}
+	
+	\KwOut{max: máxima desviación}
+	
+	\caption{CalcularDev}
+	\label{calcular_dev}
+\end{algorithm}
+
+Con este test lo que estamos haciendo es ver cómo se diferencia el atributo escogido para la comparación con cada instancia del resto del conjunto de datos. La idea es similar a la que expusimos cuando comentamos brevemente los Isolated Forests de ir dividiendo los datos con un valor de corte. 
+
+Ahora ya tenemos las herramientas con las que podemos medir el contraste de un subespacio. Para ver cuáles son aquellos con mayor contraste los autores probaron dos formas quedándose finalmente con la que yo he añadido a la implementación. En primer lugar podemos pensar en algún tipo de cota que se vaya adaptando al número de subespacios o al contraste que estos vayan presentando. Esta idea finalmente fue descartada primero por no funcionar de forma satisfactoria y segundo por la dificultad de elección de la cota. La opción escogida finalmente es evaluar para cada dimensión todos los subespacios posibles, se obtiene el contraste de cada uno de ellos y se toma un número fijo de los primeros. De esta forma obtendremos por ejemplo en cada dimensión 500 candidatos. Una vez que hayamos evaluado todas las dimensiones volvemos a ordenar los subespacios por contraste (ya sin tener en cuenta la dimensionalidad) y nos quedamos con los 1000 primeros. Con esta metodología vamos a tener la certeza de que vamos a quedarnos con los 1000 subespacios con mayor contraste de entre todos los posibles. 
+
+Veamos la implementación del algoritmo.
+
+\begin{lstlisting}[language=Python]
+def computeContrast(self, subspace):
+	'''
+	@brief Function that computes the contrast for a given subspace
+	@param subspace Numpy array with the indexes of the features that define the subspace
+	@return It returns a float representing the contrast of the subspace
+	'''
+	''' We set the adaptative size of the test'''
+	size = int(len(self.dataset)*np.power(self.alpha, len(subspace)))
+	''' Number of instances in the dataset'''
+	N = len(self.dataset)
+	deviation = 0
+	''' We repeat the process M times'''
+	for i in range(1,self.M+1):
+		''' This is the comparison attribute for the test, so it will stay untouched'''
+		comparison_attr=np.random.randint(low=0, high=len(subspace))
+		''' List of booleans that masks the instances of the dataset selected'''
+		selected_objects = np.array([True]*N)
+		''' Select random indexes'''
+		selected_objects[reduce(np.union1d,np.array([np.random.choice(N,size=size,replace=False) for _ in range(len(subspace)-1)]))]=False
+		''' With the sample given by the mask selected_objects we compute the deviation'''
+		deviation+=self.computeDeviation(subspace[comparison_attr], selected_objects, subspace)
+	''' Finally the contrast is the average of all deviations'''
+	return deviation/self.M
+
+def computeDeviation(self, comparison_attr, selected_objects, subspace):
+	'''
+	@brief Function that computes the deviation of the marginal distribution
+	given a fixed attribute, a sample and the condition given as a subspace
+	@param comparison_attr This is the comparison attribute
+	@param selected_objects Mask that sets a sample of the dataset
+	@param subspace Subspace or condition to calculate the deviation
+	@return It returns a float giving the deviation
+	'''
+	max = 0
+	''' For each instance of the dataset'''
+	for d in self.dataset:
+		''' This is the cumulative value for all elements in the dataset'''
+		cumul1 = np.sum(self.dataset[:,comparison_attr][self.dataset[:,comparison_attr]<d[comparison_attr]])
+		''' This is the cumulative value for the selected_objects aka the sample'''
+		sel = self.dataset[:,comparison_attr][selected_objects]
+		cumul2 = np.sum(sel[sel<d[comparison_attr]])
+		''' Finally we compute the average in both cases'''
+		fa = cumul1/len(self.dataset)
+		fb = cumul2/len(self.dataset)
+		''' The difference in absolute value is the deviation'''
+		subs = np.absolute(fa-fb)
+		''' We return the biggest of the deviations obtained'''
+		if subs>max:
+			max = subs
+	return max
+
+def hicsFramework(self):
+	'''
+	@brief This function computes the high contrast subspaces on which to score the outlier
+	@return It returns a numpy array containing the high contrast subspaces
+	'''
+	''' Ordered subspaces by dimension type: list of numpy arrays of numpy arrays
+	 this means that in each positions there would be the subspaces of the corresponding
+	 dimension in the form of a list of subspaces which are numpy arrays'''
+	all_subspaces = []
+	''' Record of the contrast for each subspace in each dimension, same shape as all_subspaces'''
+	all_contrasts = []
+	''' For all dimensions starting from dimension 2 (correlation has no sense on dimension 1)'''
+	for dimension in range(2,len(self.dataset[0])):
+		if self.verbose:
+			print("Computing subspaces in dimension " + str(dimension) + "/" + str(len(self.dataset[0])))
+		candidates = []
+		contrasts = []
+		''' This list will keep the indexes of the redundant subspaces, those are d-dimensional subspaces with d+1-dimensional
+		 subspaces containing them with higher contrast'''
+		redundant = []
+		''' For dimension 2 we just obtain all possible indexes and make all combinations'''
+		if dimension==2:
+			''' Calculate the candidates as all possible combinations'''
+			indexes = list(range(len(self.dataset[0])))
+			candidates = np.array([np.array(list(comb)) for comb in list(combinations(indexes,dimension))])
+			''' Compute the contrasts'''
+			cont = 0
+			p = Pool(self.numThreads)
+			while cont+self.numThreads<len(candidates):
+				contrasts = contrasts + p.map(self.computeContrast,candidates[cont:cont+self.numThreads])
+				cont+=self.numThreads
+				print("Computed " + str(cont) + "/" + str(len(candidates)))
+			p = Pool(len(candidates)-cont)
+			contrasts = contrasts + p.map(self.computeContrast,candidates[cont:])
+			print("Computed " + str(len(candidates)) + "/" + str(len(candidates)))
+		else:
+			''' We need to calculate now the indexes starting from a previous subspace
+			 We record the parent of each subspace to check for redundancy'''
+			parents = []
+			''' For all subspaces with one dimension less'''
+			for i in range(len(all_subspaces[-1])):
+				''' We only consider new indexes, those are the ones not uses in the father subspace'''
+				indexes = list(set(list(range(len(self.dataset[0])))).difference(set(all_subspaces[-1][i])))
+				''' For each new index'''
+				for ind in indexes:
+				''' We calculate the new candidate as the same subspace appending the index'''
+				new_can = np.append(all_subspaces[-1][i],ind)
+				''' Now we check that the candidate wasn't in the list before'''
+				new = True
+				for previous in candidates:
+					if len(np.intersect1d(previous,new_can))==len(new_can):
+						new = False
+				if new:
+					candidates.append(new_can)
+					parents.append(i)
+			''' Compute the contrasts'''
+			cont = 0
+			p = Pool(self.numThreads)
+			while cont+self.numThreads<len(candidates):
+				contrasts = contrasts + p.map(self.computeContrast,candidates[cont:cont+self.numThreads])
+				cont+=self.numThreads
+				print("Computed " + str(cont) + "/" + str(len(candidates)))
+			p = Pool(len(candidates)-cont)
+			contrasts = contrasts + p.map(self.computeContrast,candidates[cont:])
+			print("Computed " + str(len(candidates)) + "/" + str(len(candidates)))
+			
+			''' Check for redundancy'''
+			for i in range(len(parents)):
+				if contrasts[i]>all_contrasts[-1][parents[i]]:
+					redundant.append(parents[i])
+		
+		candidates = np.array(candidates)
+		contrasts = np.array(contrasts)
+		''' If there are redundant subspaces'''
+		if redundant!=[]:
+			if self.verbose:
+				print("Now deleting redundant subspaces in dimension " + str(dimension) + ", " + str(len(redundant)) + " subspaces removed.")
+		''' Delete those ones'''
+		non_redundant_sub = np.delete(all_subspaces[-1], redundant)
+		''' Update the subspaces'''
+		all_subspaces[-1]=non_redundant_sub
+		''' Sort from higher contrast to lower and only get numCandidates number of subspaces if available'''
+		if len(candidates)>self.numCandidates:
+			all_subspaces.append(candidates[contrasts.argsort()[-self.numCandidates:][::-1]])
+			all_contrasts.append(contrasts[contrasts.argsort()[-self.numCandidates:][::-1]])
+		else:
+			all_subspaces.append(candidates)
+			all_contrasts.append(contrasts)
+	''' We flatten the numpy array to obtain only a list of subspaces and contrasts'''
+	subspaces = np.array(all_subspaces).flatten()
+	contrasts = np.array(all_contrasts).flatten()
+	''' We only give the maxOutputSpaces with higher contrast if available'''
+	if len(subspaces)>self.maxOutputSpaces:
+		return subspaces[contrasts.argsort()[-self.maxOutputSpaces:][::-1]]
+	return subspaces
+
+def runMethod(self):
+	'''
+	@brief This function is the actual implementation of HICS
+	'''
+	if self.verbose:
+		print("Calculating the subspaces\n")
+	''' First we obtain the high contrast subspaces'''
+	subspaces = self.hicsFramework()
+	
+	if self.verbose:
+		print("Now calculating the scoring\n")
+	''' We initialize the scores for each instance as 0'''
+	scores = np.zeros(len(self.dataset))
+	''' For each subspace'''
+	for sub in subspaces:
+		''' We place the corresponding scorer according to parameter'''
+		scorer = None
+		if self.outlier_rank=="lof":
+			scorer = LOF()
+		elif self.outlier_rank=="cof":
+			scorer = COF()
+		elif self.outlier_rank=="cblof":
+			scorer = CBLOF()
+		elif self.outlier_rank=="loci":
+			scorer = LOCI()
+		elif self.outlier_rank=="hbos":
+			scorer = HBOS()
+		elif self.outlier_rank=="sod":
+			scorer = SOD()
+		''' Fits the scorer with the dataset'''
+		scorer.fit(self.dataset[:,sub])
+		''' Adds the scores obtained to the global ones'''
+		scores = scores+scorer.decision_scores_
+	''' Compute the average'''
+	self.outlier_score = scores/len(subspaces)
+	''' Marks the calculations as done'''
+	self.calculations_done=True
+\end{lstlisting}
