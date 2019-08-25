@@ -990,3 +990,59 @@ def runMethod(self):
 			self.outlier_score[i] = -np.sum(np.log(prob))/self.k
 	self.calculations_done=True
 \end{lstlisting}
+
+\section{Implementación}
+
+Todos los algoritmos están implementados utilizando una clase base llamada EnsembleTemplate:
+
+\begin{lstlisting}[language=Python]
+class EnsembleTemplate:
+'''
+Template class for the ensemble anomaly detectors.
+'''
+
+def __init__(self, contamination=0.1):
+	'''
+	Init template
+	'''
+	pass
+
+def fit(self, dataset):
+	'''
+	Function to set the dataset and execute the algorithm
+	'''
+	self.dataset = dataset
+	self.outlier_score = [0]*len(self.dataset)
+	self.outliers = []
+	self.runMethod()
+	return self
+
+def runMethod(self):
+	'''
+	Function to run the method implemented
+	'''
+	pass
+
+def getRawScores(self):
+	'''
+	Function that gets the raw scores
+	'''
+	return self.outlier_score
+
+def getOutliersBN(self, noutliers):
+	'''
+	Function that gets the noutliers instances of the most outlying data
+	'''
+	return self.outliers
+
+def getOutliers(self):
+	pass
+\end{lstlisting}
+
+El esqueleto de todas las clases que implementan los algoritmos de los que hemos hablado es este. En primer lugar todas las clases tienen un constructor en el que se pasan los parámetros de los modelos en caso de haberlos. En segundo lugar tenemos una función fit. El cometido de esta función es inicializar los puntajes, pasar el dataset al objeto de la clase para que se guarde y por último ejecutar el método que implementa.
+
+La función principal es la función runMethod que es la que implementa la ejecución del algoritmo en sí. Esta función no está pensada para ser llamada externamente si no desde fit. 
+
+Por último tenemos tres funciones más. La primera de ellas nos da el vector que contiene los puntajes de las anomalías. La segunda función nos da los ``noutliers'' elementos con mayor puntaje y la tercera nos devuelve las instancias anómalas basándose en un parámetro que llamamos contaminación. 
+
+El parámetro de contaminación no es más que una estimación del porcentaje de anomalías que pensamos que va a tener el conjunto de datos. Por tanto si el parámetro de contaminación fuera por ejemplo $0.1$ entonces esta función devolvería el primer $10\%$ con mayor valor de puntaje de anomalía.
