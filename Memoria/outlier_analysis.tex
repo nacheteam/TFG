@@ -243,6 +243,8 @@ pdfproducer = {pdflatex}
 
 \usepackage{pdfpages}
 \begin{document}
+\setlength{\parskip}{10pt}
+
 \input{portada/portada}
 \input{prefacios/prefacio}
 \frontmatter
@@ -251,7 +253,6 @@ pdfproducer = {pdflatex}
 %\listoftables
 %
 \mainmatter
-\setlength{\parskip}{10pt}
 
 \input{capitulos/01_introduccion}
 %
