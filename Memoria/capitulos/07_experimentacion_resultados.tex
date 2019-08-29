@@ -277,7 +277,81 @@ OUTRES no obtiene demasiados resultados satisfactorios pero donde mejor funciona
 
 \begin{figure}[H]
 	\centering
-	\label{wine}
-	\includegraphics[scale=0.7]{imagenes/wine}
-	\caption{Proyección de wine}
+	\label{pima}
+	\includegraphics[scale=0.7]{imagenes/pima}
+	\caption{Proyección de pima}
 \end{figure}
+
+En un primer vistazo este conjunto de datos parece bastante complejo para obtener buenos resultados, por lo que merece la pena que veamos algunos de los subespacios en los que las instancias son anómalas para así poder entender un poco mejor el resultado. Estas imágenes son de todos los subespacios posibles obtenidos por outres para cada instancia (en rojo) junto con el vecindario (en azul). Si tiene dimensión 2 se pintan directamente, si tienen una dimensionalidad mayor se hace primero la reducción de dimensionalidad mediante la técnica TSNE. Veamos algunos ejemplos:
+
+\begin{figure}[H]
+	\centering
+	\label{22}
+	\includegraphics[scale=0.7]{imagenes/22}
+	\caption{Instancia 18 sobre el subespacio $[4,6]$}
+\end{figure}
+
+Como podemos ver en dos dimensiones se comprueba rápidamente que la instancia es anómala, pero estos subespacios no son los más interesantes. Cuanto mayor es el vecindario y mayor es la dimensionalidad más conclusiones podemos obtener. Veamos uno de estos ejemplos de mayor dimensionalidad.
+
+\begin{figure}[H]
+	\centering
+	\label{68_tsne}
+	\includegraphics[scale=0.7]{imagenes/68_tsne}
+	\caption{Instancia 64 sobre el subespacio $[2,5,3]$}
+\end{figure}
+
+Como podemos ver en este caso tenemos un subespacio de dimensión 3. Las instancias azules están más próximas entre sí que con respecto a la roja por lo que es normal que esta sea considerada anómala en este subespacio pues está aislada.
+
+\begin{figure}[H]
+	\centering
+	\label{173_tsne}
+	\includegraphics[scale=0.7]{imagenes/173_tsne}
+	\caption{Instancia 154 sobre el subespacio $[4,5,3,2]$}
+\end{figure}
+
+Este ejemplo es de un subespacio de dimensionalidad 4. Aquí podemos ver claramente que de nuevo la instancia no sólo se encuentra algo aislada, si no que se encuentra en lo que podemos calificar como una zona poco densa con respecto a sus vecinos. Por ejemplo el dato central de esta figura no podría ser nunca considerado una anomalía en este subespacio concreto, pues al menos el vecindario sería como mínimo el que estamos observando y por tanto vemos que no es un dato raro, de hecho es el centroide de este vecindario.
+
+\begin{figure}[H]
+	\centering
+	\label{190_tsne}
+	\includegraphics[scale=0.7]{imagenes/190_tsne}
+	\caption{Instancia 170 sobre el subespacio $[2,6,0]$}
+\end{figure}
+
+Este ejemplo es aún más esclarecedor pues como podemos ver los datos normales están no sólo muy concentrados, si no además alineados. Esta idea de encontrar alineamiento en subespacios podría ser una buena característica a buscar en subespacios para poder emplear en ellos técnicas como Mahalanobis Kernel.
+
+Para que sea más fácil ver los datos de acierto, vamos a ponerlos en una tabla.
+
+% Please add the following required packages to your document preamble:
+% \usepackage[normalem]{ulem}
+% \useunder{\uline}{\ul}{}
+\begin{table}[H]
+	\resizebox{\textwidth}{!}{
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+		\hline
+		{\ul \textbf{Data / Mod}} & \textbf{Trinity}   & \textbf{MK}        & \textbf{OUTRES} & \textbf{LODA}      & \textbf{HICS} & \textbf{ABOD}      & \textbf{COF}       & \textbf{HBOS}      & \textbf{KNN} & \textbf{LOF}       & \textbf{MCD}       & \textbf{OCSVM}     & \textbf{PCA}       & \textbf{SOD}       & \textbf{SOS} \\ \hline
+		\textbf{annthyroid}       & 26.2172\%          & 12.3595\%          & 7.4906\%        & 8.9887\%           & 6.5543\%      & 25.0936\%          & 23.0936\%          & 26.0299\%          & 28.4644\%    & 29.2134\%          & \textbf{45.8801\%} & 11.2359\%          & 23.7827\%          & 30.7116\%          & 7.4906\%     \\ \hline
+		\textbf{arrhythmia}       & 48.4848\%          & \textbf{51.5151\%} & NAN             & 37.8787\%          & NAN           & 37.8787\%          & 46.9696\%          & 50\%               & 48.4848\%    & 42.4242\%          & \textbf{51.5151\%} & 15.1515\%          & 42.4242\%          & 28.7878\%          & 13.6363\%    \\ \hline
+		\textbf{breastw}          & 93.3054\%          & \textbf{95.3974\%} & 50.6276\%       & \textbf{95.3974}   & 1.2552\%      & NAN                & 8.3682\%           & 93.7238\%          & 91.2133\%    & 13.3891\%          & 89.9581\%          & 91.2133\%          & 92.8870\%          & 80.7531\%          & 49.7907\%    \\ \hline
+		\textbf{cardio}           & 44.3181\%          & 51.7045\%          & NAN             & 59.0909\%          & NAN           & 22.7272\%          & 19.8863\%          & 47.1590\%          & 33.5227\%    & 17.0454\%          & 40.9090\%          & 50.5681\%          & \textbf{60.7954\%} & 25.5681\%          & 10.7954\%    \\ \hline
+		\textbf{glass}            & 11.1111\%          & 0\%                & 0\%             & 0\%                & 11.1111\%     & 11.1111\%          & \textbf{22.2222\%} & 0\%                & 11.1111\%    & \textbf{22.2222\%} & 0\%                & 11.1111\%          & 11.1111\%          & \textbf{22.2222\%} & 11.1111\%    \\ \hline
+		\textbf{ionosphere}       & 73.0158\%          & 57.1428\%          & NAN             & 46.8253\%          & NAN           & 84.1269\%          & 77.7777\%          & 48.4126\%          & 87.3015\%    & 76.1904\%          & \textbf{88.0952\%} & 64.2857\%          & 59.5238\%          & 80.1587\%          & 61.1111\%    \\ \hline
+		\textbf{letter}           & 16\%               & 15\%               & NAN             & 4\%                & NAN           & NAN                & 42\%               & 6\%                & 43\%         & 46\%               & 16\%               & 48\%               & 8\%                & \textbf{51\%}      & 6\%          \\ \hline
+		\textbf{lympho}           & 83.3333\%          & 50\%               & NAN             & 0\%                & NAN           & 33.3333\%          & 50\%               & \textbf{100\%}     & 66.6666\%    & 83.3333\%          & 50\%               & 50\%               & 66.6666\%          & 50\%               & 16.6666\%    \\ \hline
+		\textbf{mammography}      & 25.7692\%          & 1.1538\%           & 5.3846\%        & \textbf{28.0769\%} & 8.0769\%      & 0.3846\%           & 13.8461\%          & 12.6923\%          & 21.9230\%    & 19.2307\%          & 0.7692\%           & 27.3076\%          & 25.7692\%          & 15\%               & 5\%          \\ \hline
+		\textbf{mnist}            & 40.2857\%          & \textbf{54.7142\%} & NAN             & 2\%                & NAN           & 28.5714\%          & 21.4285\%          & 17.1428\%          & 39.5714\%    & 24.2857\%          & 49.1428\%          & 0.1428\%           & 38.5714\%          & 20.5714\%          & 11.5714\%    \\ \hline
+		\textbf{musk}             & 34.0206\%          & 0\%                & NAN             & 32.9896\%          & NAN           & 2.0618\%           & 8.2474\%           & 90.7216\%          & 1.0309\%     & 3.0927\%           & 96.9072\%          & 0\%                & \textbf{98.9690\%} & 4.1237\%           & 6.1855\%     \\ \hline
+		\textbf{optdigits}        & 1.3333\%           & 0\%                & NAN             & 0\%                & NAN           & 4.6666\%           & 9.3333\%           & \textbf{18.6666\%} & 3.3333\%     & 10.6666\%          & 0\%                & 1.3333\%           & 0\%                & 3.3333\%           & 2.6666\%     \\ \hline
+		\textbf{pendigits}        & 25\%               & 16.6666\%          & 2.5641\%        & 0\%                & NAN           & 7.0512\%           & 7.6923\%           & 32.0512\%          & 8.9743\%     & 6.4102\%           & 10.2564\%          & 26.2820\%          & \textbf{32.6923\%} & 6.4102\%           & 2.5641\%     \\ \hline
+		\textbf{pima}             & 50.7462\%          & 38.8059\%          & 34.7014\%       & \textbf{54.8507\%} & 30.5970\%     & 45.8955\%          & 37.3134\%          & 50.7462\%          & 48.1343\%    & 36.9402\%          & 51.4925\%          & 39.5522\%          & 49.6268\%          & 41.4179\%          & 36.1940\%    \\ \hline
+		\textbf{satellite}        & 54.3713\%          & 32.8585\%          & NAN             & 12.6227\%          & NAN           & NAN                & 43.5166\%          & 56.8271\%          & 50.0982\%    & 37.0825\%          & \textbf{68.4675\%} & 30.1571\%          & 48.3791\%          & 41.3064\%          & 29.9115\%    \\ \hline
+		\textbf{satimage-2}       & \textbf{90.1408\%} & \textbf{90.1408\%} & NAN             & 0\%                & NAN           & 16.9014\%          & 12.6760\%          & 64.7887\%          & 39.4366\%    & 7.0422\%           & 63.3802\%          & 0\%                & 83.0985\%          & 22.5352\%          & 2.8169\%     \\ \hline
+		\textbf{speech}           & 0\%                & 4.9180\%           & NAN             & 3.2786\%           & NAN           & \textbf{13.1147\%} & 1.6393\%           & 3.2786\%           & 1.6393\%     & 3.2786\%           & 3.2786\%           & 1.6393\%           & 3.2786\%           & 3.2786\%           & 9.8360\%     \\ \hline
+		\textbf{thyroid}          & 39.7849\%          & 22.5806\%          & 5.3763\%        & 1.0752\%           & 0\%           & 0\%                & 4.3010\%           & 48.3870\%          & 23.6559\%    & 19.3548\%          & \textbf{65.5913\%} & 15.0537\%          & 35.4838\%          & 21.5053\%          & 4.3010\%     \\ \hline
+		\textbf{vertebral}        & 3.3333\%           & 10\%               & 3.3333\%        & 0\%                & 3.3333\%      & 6.6666\%           & 10\%               & 3.3333\%           & 0\%          & 3.3333\%           & 0\%                & \textbf{23.3333\%} & 0\%                & 3.3333\%           & 13.3333\%    \\ \hline
+		\textbf{vowels}           & 24\%               & 0\%                & 4\%             & 8\%                & 32\%          & \textbf{74\%}      & 50\%               & 12\%               & 48\%         & 34\%               & 6\%                & 26\%               & 14\%               & 44\%               & 28\%         \\ \hline
+		\textbf{wbc}              & 42.8571\%          & 0\%                & NAN             & \textbf{71.4285\%} & NAN           & 33.3333\%          & 28.5714\%          & 61.9047\%          & 52.3809\%    & 42.8571\%          & 42.8571\%          & 61.9047\%          & 57.1428\%          & 52.3809\%          & 14.2857\%    \\ \hline
+		\textbf{wine}             & 60\%               & 10\%               & 0\%             & 80\%               & 80\%          & 60\%               & 70\%               & 0\%                & 80\%         & \textbf{90\%}      & 50\%               & 10\%               & 30\%               & 50\%               & 0\%          \\ \hline
+	\end{tabular}
+}
+\end{table}
