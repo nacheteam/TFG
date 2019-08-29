@@ -551,3 +551,23 @@ Veamos los tiempos en una tabla de datos.
 	\end{tabular}
 }
 \end{table}
+
+\section{Conclusiones y trabajo futuro}
+
+Ya hemos visto todos los resultados que hemos obtenido con los modelos y el análisis de cómo funcionan de forma teórica por lo que hemos reunido todos los ingredientes necesarios para sacar algunas conclusiones sobre este estudio.
+
+En primer lugar cabe decir que en general los algoritmos que hemos implementado (salvo los basados en subespacios) están al mismo nivel de rendimiento que los modelos clásicos. En este estudio he comprendido el potencial que podría tener un buen modelo que combine de forma adecuada modelos clásicos o incluso modelos de ensamblaje.
+
+El enfoque de los algoritmos basados en subespacios que se han implementado no parece ser algo que funcione en conjuntos de datos reales aunque los conceptos de densidad puedan resultar interesantes por ofrecer otro punto de vista. Algoritmos como HICS y OUTRES pueden ofrecer un buen aporte extra para un modelo ya implementado, es decir, utilizar estos algoritmos para detectar lo que ellos mismos llaman anomalías no triviales. Como modelos individuales ya hemos visto que no tienen un desempeño demasiado bueno además del alto consumo en tiempo que tienen y que hace que sea difícil su aplicación en conjuntos de datos más grandes. 
+
+Un punto de vista interesante y que se debería tener en cuenta es la aplicación de modelos en función del tipo de datos que tengamos. Es decir, un algoritmo que regule su propio comportamiento primero analizando brevemente el conjunto de datos con algunos parámetros y posteriormente ejecutando los métodos que convengan. 
+
+Hemos podido ver en los resultados que para todos los modelos existen conjuntos de datos en los que no funcionan bien, incluso algunos llegan a sacar un 0\% tanto de los clásicos como de los algoritmos de ensamblaje. Esto nos está reflejando que no es una aproximación inteligente intentar dar un algoritmo que aplique una misma técnica para todos los conjuntos de datos con los que se encuentre.
+
+Creo que los resultados que hemos obtenido dejan margen de mejora, lo cual hace este campo interesante y desafiante para proponer nuevas ideas sobre la mesa. En primer lugar hemos visto que todos los algoritmos tienen problemas en cuanto al manejo de los valores perdidos. Es lógico que estos algoritmos no estén preparados ante vectores que no dispongan de ningún valor numérico, pero creo que sería interesante disponer de alguna técnica que nos permita trabajar con vectores que tengan algunos valores no disponibles. Podríamos pensar por ejemplo en alguna técnica que considere la proyección del conjunto de datos sobre los atributos disponibles de esa instancia con valores perdido y hacer un estudio sobre esa proyección. Como hemos discutido previamente es fácil que, tras esas instancias con valores perdidos, se escondan anomalías reales. 
+
+Los algoritmos como HICS y OUTRES tienen ideas teóricas muy elaboradas pero no piensan en los problemas de eficiencia que llevan tras de sí, con lo que se hacen algoritmos poco prácticos para su uso. Sería de utilidad la inclusión de técnicas inherentes a los algoritmos que mejoren su eficiencia sin reducir en exceso su desempeño. Por ejemplo la aproximación de HICS al obtener los subespacios de alto contraste siempre se queda con los de mayor contraste pero a cambio debemos hacer un cómputo desmesurado de subespacios y contrastes que disminuyen terriblemente su eficiencia.
+
+Por contra hemos visto como Trinity consigue unos resultados robustos en comparación con los modelos que emplea. Este tipo de algoritmos de ensamblaje pueden tener mejores resultados según la experiencia que he desarrollado en este trabajo. Creo que se podrían mezclar diferentes técnicas en un algoritmo como Trinity. Por ejemplo hemos visto que hay subespacios o trozos de los conjuntos de datos en los que el alineamiento de las instancias en hiperplanos u otras formas es clara y evidente. Esto nos hace pensar en la posibilidad de usar en dichas circunstancias algoritmos como Mahalanobis Kernel. 
+
+Todo este análisis nos está dejando claro que el futuro de los algoritmos de ensamblaje es prometedor y como línea principal de trabajo futuro para mí mismo destaco la posibilidad de crear un modelo con todo lo aprendido. Empleando las técnicas de análisis de subespacios, algoritmos basados en densidad y relación entre atributos y algoritmos basados en histogramas se podría desarrollar un modelo más completo que supere en desempeño a los estudiados en este trabajo y sobre todo a los algoritmos clásicos.
