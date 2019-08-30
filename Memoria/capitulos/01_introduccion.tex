@@ -6,7 +6,7 @@
 
 Antes de comenzar el objeto de estudio de este trabajo, lo primero que debemos hacer es contextualizar el mismo y establecer un marco de trabajo en cuanto a teoría que se empleará en la posterior experimentación y desarrollo del mismo. 
 
-El estudio realizado y plasmado en este trabajo se centra en la obtención de técnicas para la detección de anomalías en conjuntos de datos, concepto que introduciremos posteriormente. En concreto las técnicas que se van a desarrollar son las conocidas como técnicas de ensemble que se basan en el estudio del problema o bien combinando modelos existentes o bien haciendo un estudio pormenorizado aplicando algún criterio por subespacios del conjunto de datos. 
+El estudio realizado y plasmado en este trabajo se centra en la obtención de técnicas para la detección de anomalías en conjuntos de datos, concepto que introduciremos posteriormente. En concreto las técnicas que se van a desarrollar son las conocidas como técnicas ensemble o de ensamblaje que se basan en el estudio del problema o bien combinando modelos existentes o bien haciendo un estudio pormenorizado aplicando algún criterio por subespacios del conjunto de datos. 
 
 En primer lugar el trabajo desarrollará una introducción a la teoría de aprendizaje y resolución de problemas mediante datos y no por diseño así como la teoría matemática que esto involucra. Esta primera sección nos dará suficiente estructura al trabajo para poder definir en términos de distancias lo que significa que una instancia de un conjunto de datos sea una anomalía.
 
@@ -41,7 +41,7 @@ Ahora que comprendemos el alcance del problema podemos intentar profundizar un p
 
 \section{Problema a abordar y técnicas empleadas}
 
-Este estudio va a estar enfocado en el estudio de las anomalías, en concreto, empleando lo que se conocen como técnicas de ensamblaje o algoritmos de ensamblaje. Para ello vamos a dar un marco inicial sobre aprendizaje automático, pues estos algoritmos se basan en los principios de funcionamiento del mismo. 
+Este trabajo va a estar enfocado en el estudio de las anomalías, en concreto, empleando lo que se conocen como técnicas de ensamblaje o algoritmos de ensamblaje. Para ello vamos a dar un marco inicial sobre aprendizaje automático, pues estos algoritmos se basan en los principios de funcionamiento del mismo. 
 
 El objetivo final de esta memoria será la implementación de cinco modelos de ensamblaje: HICS, OUTRES, Trinity, LODA y Mahalanobis Kernel. Estos algoritmos no han sido escogidos al azar, si no con la intención de cubrir el máximo de tipos posibles en cuanto a algoritmos de ensamblaje y sobre todo algoritmos de lo que se suele denominar el estado del arte. Esta expresión es un anglicismo (``state of art'') que no quiere decir más que algoritmos o conocimientos que están a la cabeza en cuanto a rendimiento.
 
@@ -61,7 +61,7 @@ Todos estos conocimientos están basados en la teoría estadística de Vapnik y 
 
 Este marco nos dirige hacia la primera definición del concepto de anomalía que está basada en distancias y rangos intercuartil que se describen en el libro Outlier Analysis \cite{aggarwal_outlier_2017-1}.
 
-Para dar una definición alternativa y una buena introducción para los modelos debemos hacer una breve introducción estadística. En esta introducción se define un vector aleatorio así como su función de densidad, su función característica y su función de distribución. Se introducen los conceptos de independencia y probabilidad y esperanza condicionada. Por último y aprovechando este contexto se enuncian y demuestran algunas desigualdades y fórmulas famosas. Este contenido viene dado por los apuntes de la asignatura Estadística Multivariante del grado en Matemáticas, los apuntes de la asignatura Procesos Estocásticos del grado en Matemáticas y el libro Probability Theory de M. Loève \cite{m._loeve_probability_1977}.
+Para dar una definición alternativa y una buena introducción para los modelos debemos hacer una breve introducción estadística. En esta introducción se define un vector aleatorio así como su función de densidad, su función característica y su función de distribución. Se refieren los conceptos de independencia y probabilidad y esperanza condicionada. Por último y aprovechando este contexto se enuncian y demuestran algunas desigualdades y fórmulas famosas. Este contenido viene dado por los apuntes de la asignatura Estadística Multivariante del grado en Matemáticas, los apuntes de la asignatura Procesos Estocásticos del grado en Matemáticas y el libro Probability Theory de M. Loève \cite{m._loeve_probability_1977}.
 
 Tras esto puede ser introducido el concepto probabilístico y basado en densidad de una anomalía. Este concepto viene apoyado en el paper \cite{fabian_keller_hics:_2012} que describe el algoritmo HICS.
 
