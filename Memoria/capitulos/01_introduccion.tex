@@ -27,7 +27,7 @@ En este contexto y sin haber comenzado la discusión del problema podríamos con
 	\caption{Ejemplo de conjunto de datos \href{https://commons.wikimedia.org/wiki/File:Earwig_ithenticate_scatterplot.png}{(Wikimedia)}}
 \end{figure}
 
-Pensemos por ejemplo en este conjunto de datos. Tenemos un cluster muy bien definido en la esquina inferior izquierda y datos dispersos. ¿Podemos afirmar claramente cual es la línea que distingue los datos anómalos de los normales? 
+Pensemos por ejemplo en este conjunto de datos. Tenemos un clúster muy bien definido en la esquina inferior izquierda y datos dispersos. ¿Podemos afirmar claramente cual es la línea que distingue los datos anómalos de los normales? 
 
 Esta discusión nos lleva a la primera barrera que tenemos que superar en este trabajo. El problema no es resoluble por diseño y por tanto debemos realizar una aproximación a través de los datos. Esto nos va a llevar a aprender de los mismos, valorar cada dato con una puntuación que nos acabará discriminando los datos normales y anómalos.
 
@@ -37,7 +37,7 @@ Podríamos pensar que estamos ante un problema de clasificación ordinario, es d
 
 Por tanto este problema no es de clasificación al uso pues no es un problema supervisado. Esto significa que, en general no vamos a tener un conjunto etiquetado en el que poder probar cómo aprende nuestro modelo y tendremos que abordar otras técnicas para comprobar el desempeño.
 
-Ahora que comprendemos el alcance del problema podemos intentar profundizar un poco más en la base teórica del mismo analizando las herramientas que el machine learning nos provee para abordarlo.
+Ahora que comprendemos el alcance del problema podemos intentar profundizar un poco más en la base teórica del mismo analizando las herramientas que el Machine Learning nos provee para abordarlo.
 
 \section{Problema a abordar y técnicas empleadas}
 
@@ -65,7 +65,7 @@ Para dar una definición alternativa y una buena introducción para los modelos 
 
 Tras esto puede ser introducido el concepto probabilístico y basado en densidad de una anomalía. Este concepto viene apoyado en el paper \cite{fabian_keller_hics:_2012} que describe el algoritmo HICS.
 
-Con los dos conceptos de probabilidad y el marco teórico ya planteado se introducen los modelos implementados y el concepto de algoritmos de ensamblaje. Estos conceptos sobre los algoritmos vienen de los libros Outlier Analysis \cite{aggarwal_outlier_2017-1} y Outlier Ensembles \cite{aggarwal_outlier_2017}. Se aporta en esta sección la explicación teórica de cada modelo así como la implementación desarrollada por mí mismo en Python. Los papers en los que se basa cada algoritmo son \cite{fabian_keller_hics:_2012}, \cite{aggarwal_outlier_2017}, \cite{pevny_loda:_2016} y \cite{muller_statistical_2011}.
+Con los dos conceptos de probabilidad y el marco teórico ya planteado se introducen los modelos implementados y el concepto de algoritmos de ensamblaje. Estos conceptos sobre los algoritmos vienen de los libros Outlier Analysis \cite{aggarwal_outlier_2017-1} y Outlier Ensembles \cite{aggarwal_outlier_2017}. Se aporta en esta sección la explicación teórica de cada modelo así como la implementación desarrollada por mí mismo en Python. Los artículos en los que se basa cada algoritmo son \cite{fabian_keller_hics:_2012}, \cite{aggarwal_outlier_2017}, \cite{pevny_loda:_2016} y \cite{muller_statistical_2011}.
 
 Finalmente se analiza el comportamiento de todos los modelos en la sección de resultados frente a los algoritmos considerados como clásicos. Se aportan conclusiones tras todo el trabajo y, al haber margen de mejora, se aportan algunas ideas que podrían aplicarse en un futuro para desarrollar un modelo propio.
 

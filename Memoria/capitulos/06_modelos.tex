@@ -360,7 +360,7 @@ $$K_{\epsilon}(x) = (1-x^2) \ \forall x<1$$
 
 En cuanto al $\mu$ y $\sigma$ que aparecen en el cálculo de la desviación son la media y la desviación típica de las densidades en el vecindario adaptativo de $o$ en el subespacio $S$. Por tanto con la desviación estamos midiendo cómo de alejada está la instancia $o$ en densidad respecto del resto de las instancias de su vecindario adaptativo. Si esta densidad es mayor a dos desviaciones típicas entonces $dev(o,S')$ será mayor que $1$ y por tanto estaremos ante un dato anómalo.
 
-Si este es el caso, al estar los puntajes de anomalías inicializados a 1 podemos actualizarlo multiplicando por un valor menor estricto que 1. En este caso este valor es $\frac{den(o,S')}{dev(o,S')}$. Como este valor es menor que 1 reducirá el puntaje y lo acercará más a una anomalía. De esta forma cuantas más veces se actualize su puntaje y cuanto menor puntaje obtenga con $\frac{den(o,S')}{dev(o,S')}$ más anómalo consideraremos el dato.
+Si este es el caso, al estar los puntajes de anomalías inicializados a 1 podemos actualizarlo multiplicando por un valor menor estricto que 1. En este caso este valor es $\frac{den(o,S')}{dev(o,S')}$. Como este valor es menor que 1 reducirá el puntaje y lo acercará más a una anomalía. De esta forma cuantas más veces se actualice su puntaje y cuanto menor puntaje obtenga con $\frac{den(o,S')}{dev(o,S')}$ más anómalo consideraremos el dato.
 
 Finalmente si el subespacio era relevante significa que aún podemos aumentar más la dimensionalidad pues puede que nos queden subespacios de mayor orden que sigan sin estar distribuidos según una uniforme.
 
