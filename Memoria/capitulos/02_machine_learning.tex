@@ -24,14 +24,14 @@ Para finalizar esta breve introducción y poder continuar profundizando vamos a 
 
 \begin{itemize}
 	\item Funciones lineales: En este caso la clase de funciones $\mathcal{H}$ está formada por funciones de la forma $h(x) = w_0 + \sum_{i=1}^{d}x_i w_i$ donde $w\in \mathbb{R}^{d+1}$. Este es el modelo de funciones más clásico.
-	\item Funciones trigonométricas: Un ejemplo de una clase de funciones trigonométricas podría ser $f_m(x,v_m,w_m) = \sum_{j=1}^{m-1}(v_j \sin (jx) + w_j \cos (jx)) + w_0$ donde en este caso la entrada es un único valor real. Este tipo de clases de funciones serán útiles en problemas de regresión que luego explicaremos con algo más de detalle aunque sin centrarnos mucho en ello pues no es el objetivo del estudio.
+	\item Funciones trigonométricas: Un ejemplo de una clase de funciones trigonométricas podría ser $f_m(x,v_m,w_m) = \sum_{j=1}^{m-1}(v_j \sin (jx) + w_j \cos (jx)) + w_0$ donde en este caso la entrada es un único valor real. Este tipo de clases de funciones serán útiles en problemas de regresión que luego explicaremos con algo más de detalle.
 \end{itemize}
 
 \subsection{Objetivo del aprendizaje}
 
 Cuando hablamos de aprendizaje nos referimos a que queremos obtener una cierta información a partir de los datos de que disponemos. Como ya se ha mencionado, intentamos obtener una función de una familia de funciones que aproxime o modele de buena manera la salida del sistema. Por tanto, ese es nuestro objetivo: obtener una función de la familia de funciones que minimice el error.
 
-El problema que enfrentamos es que sólo disponemos de un número finito, por ejemplo $n$, de observaciones de datos y su correspondiente salida. Esto nos va a hacer que no podamos tener una garantía de optimalidad a no ser que tendamos $n$ a infinito. 
+El problema que enfrentamos es que sólo disponemos de un número finito, por ejemplo $n$, de observaciones de datos y su correspondiente salida. Esto nos va a hacer que no podamos tener una garantía de optimalidad a no ser que hagamos tender $n$ a infinito. 
 
 Sin embargo si que podemos cuantificar cómo de buena es una aproximación con respecto a otra mediante la función pérdida o error que denotaremos como $L(y,f(x,\omega))$. Esta función nos va a medir la diferencia entre la salida real del sistema y la salida dada por la función $f$ para la entrada $x$ siendo siempre $L(y,f(x,\omega))\geq 0$.
 
@@ -130,13 +130,13 @@ Este principio inductivo se utiliza en el problema de estimación de la función
 
 $$P[modelo | datos] = \frac{P[datos | modelo] \cdot P[modelo]}{P[datos]}$$
 
-donde $P[modelo]$ es la probabilidad a priori, $P[datos]$ es la probabilidad de los datos de entrenamiento y $P[datos | modelo]$ es la probabilidad de que los datos estén generados por el modelo.
+, donde $P[modelo]$ es la probabilidad a priori, $P[datos]$ es la probabilidad de los datos de entrenamiento y $P[datos | modelo]$ es la probabilidad de que los datos estén generados por el modelo.
 
 \subsubsection{Descripción de mínima longitud}
 
 La idea de este principio es la minimización de la longitud que se necesita emplear para describir un modelo y la correspondiente salida. Llamamos l a la longitud total:
 
-$$l = L(modelo) + L(datos | modelo)$$
+$$l = L(modelo) + L(datos | modelo).$$
 
 Esta medida puede ser vista como una medida de complejidad conjunta de todo el modelo.
 
@@ -160,7 +160,7 @@ Este problema que conlleva la alta dimensionalidad proviene de la geometría de 
 		\includegraphics[scale=0.6]{imagenes/radio_alta_dimensionalidad}
 		\caption{Para 2 dimensiones necesitamos menor lado que para 3 dimensiones. \cite[p.~64]{cherkassky_learning_2007}}
 	\end{figure}
-	\item Casi todo punto está más cerca de un borde que de otro punto. Pensemos en un conjunto de datos con $n$ puntos distribuidos de forma uniforme en una bola $d$-dimensional de radio unidad. Para este conjunto de datos, según \cite{hastie_t._elements_nodate}, la distancia media entre el centro de la distribución y los puntos más cercanos a dicho centro se mide bajo la fórmula:
+	\item Casi todo punto está más cerca de un borde que de otro punto. Pensemos en un conjunto de datos con $n$ puntos distribuidos de forma uniforme en una bola $d$-dimensional de radio unidad. Para este conjunto de datos, según Hastie \cite{hastie_t._elements_nodate}, la distancia media entre el centro de la distribución y los puntos más cercanos a dicho centro se mide bajo la fórmula:
 	
 	$$D(d,n) = (1-\frac{1}{2}^{1/n})^{1/d}$$
 	
@@ -279,7 +279,7 @@ Donde $\hat{f}$ indica la transformada de Fourier de la función $f$ y $\frac{1}
 
 Este enfoque es muy utilizado en el estudio del error, dividiéndolo en sesgo y varianza para hacer un mejor estudio del mismo y poder enfrentar ambos con varios métodos. Este estudio del caso clásico no es válido (o al menos no del todo) para problemas no supervisados como es nuestro caso. Vamos a hacer una adaptación de esta teoría para que pueda encajar en nuestro caso de estudio.
 
-Tenemos que tener en cuenta que no conocemos la salida real del sistema en el caso de detección de anomalías, es decir, no sabemos estimar con certeza el sesgo y la varianza y por tanto el error que cometemos. En primer lugar vamos a ver una pequeña adaptación de la notación al caso de detección de anomalías para poder hacer un estudio enfocado.
+Tenemos que tener en cuenta que no conocemos la salida real del sistema en el caso de detección de anomalías, es decir, no sabemos estimar con certeza el sesgo y la varianza y por tanto el error que cometemos. En primer lugar vamos a ver una pequeña adaptación de la notación al caso de detección de anomalías para poder hacer un estudio enfocado en nuestro problema.
 
 Vamos a notar por $X_1 , ... , X_n$ los datos de test y $\mathcal{D}$ como conjunto de datos de entrenamiento. Además vamos a considerar que existe una función $f$ que nos da la etiqueta real de un dato, esto es, si es o no una anomalía. Por tanto podemos decir que la auténtica etiqueta de un dato es $y_i = f(X_i)$. Además nosotros estaremos usando un modelo ya escogido por nosotros para predecir la etiqueta de un dato de test, esto es $g(X_i, \mathcal{D})\approx y_i+\beta$ donde $\beta$ es un cierto error.
 
@@ -289,7 +289,7 @@ $$MSE = \frac{1}{n}\sum_{i=1}^{n}\{y_i - g(X_i, \mathcal{D})\}^2$$
 
 Y podemos definir también el valor esperado del error medio al cuadrado como:
 
-$$E[MSE] = \frac{1}{n} \sum_{i=1}^{n}E[\{y_i - g(X_i, \mathcal{D}\}^2]$$
+$$E[MSE] = \frac{1}{n} \sum_{i=1}^{n}E[\{y_i - g(X_i, \mathcal{D})\}^2]$$
 
 Una vez definido el $MSE$ esperado podemos desarrollar un poco el cálculo para poder obtener el error y la varianza que esperamos.
 
@@ -379,11 +379,11 @@ Por último y para completar la cadena de desigualdades que buscamos vamos a def
 
 $$H_{ann}(n) = \ln (E[N(Z_n)])$$
 
-Haciendo uso de la conocida desigualdad de Jensen
+Haciendo uso de la conocida desigualdad de Jensen,
 
-$$\sum_{i=1}^{n}a_i \ln (x_i) \leq \ln (\sum_{i=1}^{n}a_i x_i)$$
+$$\sum_{i=1}^{n}a_i \ln (x_i) \leq \ln (\sum_{i=1}^{n}a_i x_i)$$,
 
-podemos ver claramente que $H(n)\leq H_{ann}(n)$. Por tanto obtenemos la cadena de desigualdades:
+ podemos ver claramente que $H(n)\leq H_{ann}(n)$. Por tanto obtenemos la cadena de desigualdades:
 
 $$H(n)\leq H_{ann}(n) \leq G(n) \leq n\ln (2)$$
 
@@ -488,7 +488,7 @@ Con esta desigualdad estamos dando la cota de cómo se comporta el error real co
 
 Además, para resolver la segunda de las preguntas la teoría de Vapnik-Chervonenkis nos da la siguiente cota con probabilidad al menos $1-2\eta$:
 
-$$R(\omega_n^*)-\min_{\omega} R(\omega) \leq \sqrt{\frac{-\ln (\eta)}{2n}} + \frac{\epsilon}{2} (1+\sqrt{1+\frac{4}{\epsilon}})$$
+$$R(\omega_n^*)-\min_{\omega} R(\omega) \leq \sqrt{\frac{-\ln (\eta)}{2n}} + \frac{\epsilon}{2} \left( 1+\sqrt{1+\frac{4}{\epsilon}} \right)$$
 
 En este caso podemos ver que la cota es aún mayor que en el caso anterior, teniéndose tanto en esta cota como en la anterior que a mayor nivel de confianza (menor valor de $\eta$) mayor es la cota y por tanto menos información tenemos. Es decir, no podemos conocer una buena cota con un nivel de confianza alto. Este hecho no debería de sorprendernos pues seguimos trabajando con un número finito de datos y ya sabemos que no podemos obtener una aproximación todo lo buena que queramos con un número finito de datos de entrenamiento.
 

@@ -1042,7 +1042,7 @@ def getOutliers(self):
 	pass
 \end{lstlisting}
 
-El esqueleto de todas las clases que implementan los algoritmos de los que hemos hablado es este. En primer lugar todas las clases tienen un constructor en el que se pasan los parámetros de los modelos en caso de haberlos. En segundo lugar tenemos una función fit. El cometido de esta función es inicializar los puntajes, pasar el dataset al objeto de la clase para que se guarde y por último ejecutar el método que implementa.
+El esqueleto de todas las clases que implementan los algoritmos de los que hemos hablado es este. En primer lugar todas las clases tienen un constructor en el que se pasan los parámetros de los modelos en caso de haberlos. En segundo lugar tenemos una función fit. El cometido de esta función es inicializar las puntuaciones, pasar el dataset al objeto de la clase para que se guarde y por último ejecutar el método que implementa.
 
 La función principal es la función runMethod que es la que implementa la ejecución del algoritmo en sí. Esta función no está pensada para ser llamada externamente si no desde fit. 
 
