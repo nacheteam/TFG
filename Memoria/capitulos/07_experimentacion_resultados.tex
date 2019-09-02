@@ -362,6 +362,136 @@ Para que sea más fácil ver los datos de acierto, vamos a ponerlos en una tabla
 
 \clearpage
 
+Para poder completar el estudio, al estar en un caso de clasificación binaria, podemos incluir los valores AUC y algunas de las curvas ROC asociadas. Para ello en primer lugar vamos a ver la tabla de valores AUC.
+
+\clearpage
+
+% Please add the following required packages to your document preamble:
+% \usepackage[normalem]{ulem}
+% \useunder{\uline}{\ul}{}
+\begin{sidewaystable}[ph!]
+	\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+	\hline
+	{\ul \textbf{Data / Model}} & \textbf{Tinity} & \textbf{MK}     & \textbf{OUTRES} & \textbf{LODA}   & \textbf{HICS} & \textbf{ABOD}   & \textbf{COF}    & \textbf{HBOS}   & \textbf{KNN} & \textbf{LOF}    & \textbf{MCD}    & \textbf{OCSVM}  & \textbf{PCA}    & \textbf{SOD}    & \textbf{SOS} \\ \hline
+	\textbf{annthyroid}         & 0.6015          & 0.5266          & 0.5003          & 0.5084          & 0.4953        & 0.5954          & 0.5883          & 0.6005          & 0.6136       & 0.6177          & \textbf{0.7077} & 0.5206          & 0.5883          & 0.6258          & 0.5003       \\ \hline
+	\textbf{arrhythmia}         & 0.6983          & \textbf{0.7161} & NAN             & 0.6362          & NAN           & 0.6362          & 0.6895          & 0.7072          & 0.6983       & 0.6628          & 0.7161          & 0.5032          & 0.6628          & 0.5830          & 0.4943       \\ \hline
+	\textbf{breastw}            & 0.9485          & \textbf{0.9646} & 0.6202          & \textbf{0.9646} & 0.2405        & NAN             & 0.2952          & 0.9517          & 0.9324       & 0.3338          & 0.9227          & 0.9324          & 0.9452          & 0.8519          & 0.6138       \\ \hline
+	\textbf{cardio}             & 0.6919          & 0.7328          & NAN             & 0.7737          & NAN           & 0.5725          & 0.5568          & 0.7076          & 0.6322       & 0.5411          & 0.6731          & 0.7265          & \textbf{0.7831} & 0.5882          & 0.5065       \\ \hline
+	\textbf{glass}              & 0.5360          & 0.4780          & 0.4780          & 0.4780          & 0.5360        & 0.5360          & \textbf{0.5940} & 0.4780          & 0.5360       & \textbf{0.5940} & 0.4780          & 0.5360          & 0.5360          & \textbf{0.5940} & 0.5360       \\ \hline
+	\textbf{ionosphere}         & 0.7895          & 0.6657          & NAN             & 0.5852          & NAN           & 0.8761          & 0.8266          & 0.5976          & 0.9009       & 0.8142          & \textbf{0.9071} & 0.7214          & 0.6842          & 0.8452          & 0.6966       \\ \hline
+	\textbf{letter}             & 0.5519          & 0.5466          & NAN             & 0.488           & NAN           & NAN             & 0.6906          & 0.4986          & 0.696        & 0.712           & 0.5519          & 0.7226          & 0.5093          & \textbf{0.7386} & 0.4986       \\ \hline
+	\textbf{lympho}             & \textbf{0.9131} & 0.7394          & NAN             & 0.4788          & NAN           & 0.6525          & 0.7394          & 1.0             & 0.8262       & \textbf{0.9131} & 0.7394          & 0.7394          & 0.8262          & 0.7394          & 0.5657       \\ \hline
+	\textbf{mammography}        & 0.6200          & 0.4940          & 0.5156          & \textbf{0.6318} & 0.5294        & 0.4900          & 0.5589          & 0.5530          & 0.6003       & 0.5865          & 0.4920          & 0.6278          & 0.6200          & 0.5648          & 0.5136       \\ \hline
+	\textbf{mnist}              & 0.6711          & \textbf{0.7506} & NAN             & 0.4603          & NAN           & 0.6066          & 0.5673          & 0.5437          & 0.6672       & 0.5830          & 0.7199          & 0.4500          & 0.6617          & 0.5625          & 0.5130       \\ \hline
+	\textbf{musk}               & 0.6593          & 0.4836          & NAN             & 0.6539          & NAN           & 0.4942          & 0.5262          & 0.9520          & 0.4889       & 0.4996          & 0.9840          & 0.4836          & \textbf{0.9946} & 0.5049          & 0.5155       \\ \hline
+	\textbf{optdigits}          & 0.4920          & 0.4851          & NAN             & 0.4851          & NAN           & 0.5092          & 0.5332          & \textbf{0.5812} & 0.5023       & 0.5401          & 0.4851          & 0.4920          & 0.4851          & 0.5023          & 0.4989       \\ \hline
+	\textbf{pendigits}          & 0.6162          & 0.5736          & 0.5015          & 0.4883          & NAN           & 0.5244          & 0.5277          & 0.6523          & 0.5342       & 0.5211          & 0.5408          & 0.6228          & \textbf{0.6556} & 0.5211          & 0.5015       \\ \hline
+	\textbf{pima}               & 0.6217          & 0.5300          & 0.4985          & \textbf{0.6532} & 0.4669        & 0.5844          & 0.5185          & 0.6217          & 0.6016       & 0.5157          & 0.6274          & 0.5357          & 0.6131          & 0.5500          & 0.5099       \\ \hline
+	\textbf{satellite}          & 0.6662          & 0.5089          & NAN             & 0.3609          & NAN           & NAN             & 0.5868          & 0.6842          & 0.6350       & 0.5398          & \textbf{0.7693} & 0.4891          & 0.6224          & 0.5707          & 0.4873       \\ \hline
+	\textbf{satimage-2}         & \textbf{0.9500} & \textbf{0.9500} & NAN             & 0.4938          & NAN           & 0.5793          & 0.5579          & 0.8217          & 0.6934       & 0.5294          & 0.8146          & 0.4938          & 0.9144          & 0.6078          & 0.5080       \\ \hline
+	\textbf{speech}             & 0.4915          & 0.5165          & NAN             & 0.5082          & NAN           & \textbf{0.5582} & 0.4992          & 0.5082          & 0.4992       & 0.5082          & 0.5082          & 0.4999          & 0.5082          & 0.5082          & 0.5415       \\ \hline
+	\textbf{thyroid}            & 0.6913          & 0.6031          & 0.5149          & 0.4928          & 0.4873        & 0.4873          & 0.5094          & 0.7354          & 0.6086       & 0.5865          & \textbf{0.8236} & 0.5645          & 0.6692          & 0.5976          & 0.5094       \\ \hline
+	\textbf{vertebral}          & 0.4476          & 0.4857          & 0.4476          & 0.4285          & 0.4476        & 0.4666          & 0.4857          & 0.4476          & 0.4285       & 0.4476          & 0.4285          & \textbf{0.5619} & 0.4285          & 0.4476          & 0.5047       \\ \hline
+	\textbf{vowels}             & 0.6064          & 0.4822          & 0.5029          & 0.5236          & 0.6479        & \textbf{0.8653} & 0.7411          & 0.5443          & 0.7307       & 0.6582          & 0.5132          & 0.6168          & 0.5547          & 0.7100          & 0.6271       \\ \hline
+	\textbf{wbc}                & 0.6974          & 0.4705          & NAN             & \textbf{0.8487} & NAN           & 0.6470          & 0.6218          & 0.7983          & 0.7478       & 0.6974          & 0.6974          & 0.7983          & 0.7731          & 0.7478          & 0.5462       \\ \hline
+	\textbf{wine}               & 0.7831          & 0.5121          & 0.4579          & 0.8915          & 0.8915        & 0.7831          & 0.8373          & 0.4579          & 0.8915       & \textbf{0.9457} & 0.7289          & 0.5121          & 0.6205          & 0.7289          & 0.4579       \\ \hline
+\end{tabular}
+}
+\end{sidewaystable}
+
+\clearpage
+
+En este caso podemos ver que el mejor de los valores de AUC para todos los datasets vuelve a ser superior al resto en 8 conjuntos de datos con nuestros modelos de ensamblaje.
+
+Hagamos un breve repaso del valor AUC para poder entender los valores que hemos obtenido. El valor AUC o área bajo la curva ROC viene dado por el área que engloba la curva ROC, que es aquella que mide la tasa de verdaderos positivos frente a la tasa de falsos positivos, es decir:
+
+$$TPR = \frac{VP}{VP + FN}, \ FPR = \frac{FP}{VN + FP}.$$
+
+Donde $VP$ es el número de verdaderos positivos, $FP$ el número de falsos positivos, $VN$ el número de verdaderos negativos y $FN$ el número de falsos negativos. Es decir en la tasa de verdaderos positivos o $TPR$ medimos cuántos aciertos tenemos frente al número negativos que fallamos y en la tasa de falsos positivos medimos los falsos positivos que cometemos frente a los verdaderos negativos. De esta forma lo que nos va a interesar es que nuestro modelo obtenga una alta tasa $TPR$, es decir, que acertemos muchos positivos y una tasa baja de $FPR$ o lo que es lo mismo, no cometer muchos falsos positivos.
+
+La curva ROC dibuja la $TPR$ en el eje $Y$ y la $FPR$ en el eje $X$. Por tanto el mejor valor que podemos obtener de $TPR$ frente a $FPR$ sería un valor de $1$, lo que nos dejaría con un valor AUC de $1$. El peor de los escenarios sería todo lo contrario, es decir, un valor de $0$ de $TPR$ frente a $FPR$ y por tanto un valor AUC de $0$. Si por contra obtenemos un valor de entorno a $0.5$ entonces lo que estamos obteniendo es que tenemos aproximadamente una proporción similar de falsos positivos y de verdaderos positivos con lo que nuestro modelo no sería mucho mejor que un modelo aleatorio.
+
+Una vez que tenemos esta información vamos a estudiar los valores AUC obtenidos para estos conjuntos de datos. Como podemos ver tenemos conjuntos en los que ningún modelo obtiene un rendimiento bueno como por ejemplo el conjunto ``speech''. Para este conjunto el mayor de los valores AUC es $0.5582$ con lo que ninguno de los modelos obtiene un resultado mejor que un modelo aleatorio o no informado.
+
+Como podemos ver los dos modelos que repuntan en cuanto a los valores AUC vuelven a ser Mahalanobis Kernel y Trinity, siendo LODA el modelo que le sigue en cuanto a mejores valores AUC. Tanto HICS como OUTRES obtienen unos valores peores siendo casi todos valores entorno a $0.5$ menos en el conjunto ``wine'' donde obtienen los mejores resultados de entre nuestros modelos.
+
+Estos valores corroboran nuestras conclusiones sobre Mahalanobis Kernel y Trinity en cuanto a robustez y nos confirman también el desempeño de LODA. En cuanto a los algoritmos HICS y OUTRES volvemos a obtener resultados no satisfactorios.
+
+Veamos ahora para cada modelo la mejor y la peor curva ROC por parejas para poder ver gráficamente estos resultados.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/TRINITY_vertebral}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/TRINITY_satimage-2}
+	\end{subfigure}
+	\caption{Curvas ROC para Trinity}
+	\label{ROC_TRINITY}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/Mahalanobis_Kernel_wbc}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/Mahalanobis_Kernel_breastw}
+	\end{subfigure}
+	\caption{Curvas ROC para Mahalanobis Kernel}
+	\label{ROC_MK}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/OUTRES_vertebral}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/OUTRES_breastw}
+	\end{subfigure}
+	\caption{Curvas ROC para OUTRES}
+	\label{ROC_OUTRES}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/LODA_satellite}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/LODA_breastw}
+	\end{subfigure}
+	\caption{Curvas ROC para LODA}
+	\label{ROC_LODA}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/HICS_breastw}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.42]{imagenes/imgs-exp1/roc/HICS_wine}
+	\end{subfigure}
+	\caption{Curvas ROC para HICS}
+	\label{ROC_HICS}
+\end{figure}
+
+Estas gráficas confirman lo descrito por los valores AUC y además nos dan una idea del rango de valores entre los que se mueve cada algoritmo. Como podemos ver para todos los modelos el peor de los casos es un modelo no informado o aún peor incluso con tasas AUC menores a $0.5$. Por contra los tres mejores casos que obtenemos son los de Mahalanobis Kernel, LODA y Trinity. Para HICS obtenemos un buen resultado pero sólo en el conjunto ``wine'', en el resto no tenemos buenos resultados de valores AUC.
+
 Ahora para completar vamos a ver las gráficas de los tiempos consumidos por cada algoritmo para cada conjunto de datos junto con la tabla de los mismos.
 
 \begin{figure}[H]
@@ -536,7 +666,7 @@ Veamos los tiempos en segundos en una tabla de datos.
 		\hline
 		{\ul \textbf{Data / Mod}} & \textbf{Trinity} & \textbf{MK}   & \textbf{OUTRES} & \textbf{LODA} & \textbf{HICS} & \textbf{ABOD} & \textbf{COF} & \textbf{HBOS} & \textbf{KNN} & \textbf{LOF} & \textbf{MCD} & \textbf{OCSVM} & \textbf{PCA} & \textbf{SOD} & \textbf{SOS}  \\ \hline
 		\textbf{annthyroid}       & 28.5212      & 390.5937  & 193.6110    & 137.8692  & 1169.3422 & 2.5419    & 114.7065 & 1.2222    & 0.2307   & 0.1145   & 1.5861   & 2.6132     & 0.0038   & 10.9631  & 63.2884   \\ \hline
-		\textbf{arrhythmia}       & 28.8828      & 0.1243    & NAN             & 9.0474    & NAN           & 0.1662    & 0.6819   & 0.0508    & 0.0759   & 0.0917   & 3.9257   & 0.1281 seg     & 0.0843   & 0.2299   & 0.2713    \\ \hline
+		\textbf{arrhythmia}       & 28.8828      & 0.1243    & NAN             & 9.0474    & NAN           & 0.1662    & 0.6819   & 0.0508    & 0.0759   & 0.0917   & 3.9257   & 0.1281     & 0.0843   & 0.2299   & 0.2713    \\ \hline
 		\textbf{breastw}          & 23.3296      & 0.3165    & 117.8225    & 13.2879   & 315.4130  & NAN           & 1.0530   & 0.7055    & 0.0057   & 0.0098   & 0.5311   & 0.0200     & 0.0189   & 0.2007   & 23.9622   \\ \hline
 		\textbf{cardio}           & 33.0496      & 6.5851    & NAN             & 36.6768   & NAN           & 0.3701    & 7.4887   & 0.0053    & 0.0872   & 0.1170   & 1.3748   & 0.2028     & 0.0051   & 1.0434   & 2.0196    \\ \hline
 		\textbf{glass}            & 12.5272      & 0.0220    & 11.5349     & 4.0798    & 79.2560   & 0.0358    & 0.1341   & 0.0036    & 0.0014   & 0.0021   & 0.0905   & 0.0028     & 0.0021   & 0.0421   & 0.1425    \\ \hline
@@ -547,7 +677,7 @@ Veamos los tiempos en segundos en una tabla de datos.
 		\textbf{mnist}            & 42.7623      & 464.8962  & NAN             & 150.1434  & NAN           & 16.4729   & 154.4384 & 0.0502    & 9.7564   & 10.2119  & 37.5253  & 14.0057    & 0.1746   & 22.8423  & 34.5968   \\ \hline
 		\textbf{musk}             & 42.8683      & 34.4336   & NAN             & 60.4207   & NAN           & 1.6461    & 23.2048  & 0.0555    & 1.1578   & 1.3294   & 121.9505 & 4.1720     & 0.2416   & 3.8690   & 5.7815    \\ \hline
 		\textbf{optdigits}        & 36.2723      & 145.6876  & NAN             & 103.9115  & NAN           & 6.6622    & 47.9141  & 0.0312    & 2.3891   & 2.4586   & 29.2400  & 6.0881     & 0.0513   & 8.8440   & 12.5010   \\ \hline
-		\textbf{pendigits}        & 34.0999      & 340.2855  & 2757.0345   & 135.0839  & NAN           & 1.4151    & 75.1194  & 0.0076    & 0.3140   & 0.4336   & 6.3704   & 3.1717     & 0.0105 seg   & 10.5999  & 25.3345   \\ \hline
+		\textbf{pendigits}        & 34.0999      & 340.2855  & 2757.0345   & 135.0839  & NAN           & 1.4151    & 75.1194  & 0.0076    & 0.3140   & 0.4336   & 6.3704   & 3.1717     & 0.0105   & 10.5999  & 25.3345   \\ \hline
 		\textbf{pima}             & 26.3576      & 0.3482    & 40.6379     & 15.2128   & 150.1283  & 0.1230    & 0.9667   & 0.0021    & 0.0053   & 0.0057   & 0.5652   & 0.0567     & 0.0028   & 0.2303   & 0.4855    \\ \hline
 		\textbf{satellite}        & 48.2618      & 301.9960  & NAN             & 129.6712  & NAN           & NAN           & 70.0058  & 0.0146    & 0.7749   & 0.8185   & 38.1214  & 6.5430     & 0.0305   & 9.8771   & 21.9062   \\ \hline
 		\textbf{satimage-2}       & 39.7535      & 200.5037  & NAN             & 113.2818  & NAN           & 1.7584    & 54.0372  & 0.0139    & 0.7183   & 0.7796   & 32.5359  & 5.4775     & 0.0240   & 8.2761   & 15.4193   \\ \hline
