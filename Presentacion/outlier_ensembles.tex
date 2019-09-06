@@ -146,6 +146,184 @@ La propuesta de $k=1.5$ es arbitraria.
 
 \end{frame}
 
+\section{Machine Learning}
+
+\begin{frame}[fragile]{Problema que abordamos}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{alertblock}{Problema de detección de anomalías}
+	Es un problema de aprendizaje no supervisado pues no disponemos de las etiquetas.
+\end{alertblock}
+
+\pause
+
+\begin{block}{Partes teóricas del problema}
+	\begin{enumerate}
+		\item Generador.
+		\item Sistema.
+		\item Máquina de aprendizaje.
+	\end{enumerate}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Alta dimensionalidad}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Propiedades de conjuntos de alta dimensionalidad}
+	\begin{enumerate}
+		\item La densidad disminuye exponencialmente al aumentar la dimensionalidad.
+		\pause
+		\item Cuanto mayor es la dimensionalidad mayor debe ser el radio de una bola para englobar el mismo porcentaje de datos.
+		\pause
+		\item Casi todo punto está más cerca del borde del conjunto que de otro punto. 
+		$$D(d,n) = (1-\frac{1}{2}^{\frac{1}{n}})^{\frac{1}{d}}$$
+		\pause
+		\item Casi todo punto es una anomalía sobre su propia proyección.
+	\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{alertblock}{Maldición de la alta dimensionalidad}
+	A mayor dimensionalidad mayor número de puntos necesitamos para obtener una aproximación con funciones de igual regularidad.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Aproximación de funciones}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{alertblock}{Aproximación de funciones}
+	Nuestro objetivo es aproximar la función de salida del sistema con los datos que tenemos.
+\end{alertblock}
+
+\pause
+
+\begin{block}{Teoremas útiles}
+	\begin{itemize}
+		\item Teorema de Aproximación de Weierstrass
+		\pause
+		\item Serie de Fourier
+		\pause
+		\item Teorema de Kolmogorov-Arnold
+	\end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Teorema de Aproximación de Weierstrass}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Teorema de Aproximación de Weierstrass}
+	Supongamos que tenemos una función $f:[a,b]\rightarrow \mathbb{R}$ continua. Entonces $\forall \epsilon > 0$ existe un polinomio $p$ tal que $\forall x \in [a,b]$ tenemos que $|f(x)-p(x)|<\epsilon$.
+\end{block}
+
+\pause
+
+\begin{alertblock}{Aproximación por polinomios}
+	El Teorema de Aproximación de Weierstrass nos da una forma de aproximar funciones por polinomios.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Serie de Fourier}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Serie de Fourier}
+	Si tenemos una función $f:\mathbb{R} \rightarrow \mathbb{R}$ integrable en el intervalo $[t_0 - \frac{T}{2}, t_0 + \frac{T}{2}]$ entonces se puede obtener el desarrollo de Fourier de $f$ en dicho intervalo. Si $f$ es periódica en toda la recta real la aproximación es válida en todos los valores en los que esté definida.
+	
+	$$f(t) \approx \frac{a_0}{2} + \sum_{n=1}^{\infty}\left[ a_n \cos (\frac{2n\pi}{T}t) + b_n \sin (\frac{2n\pi}{T}t) \right]$$
+	
+	$$a_0 = \frac{2}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}f(t)dt, \ a_n = \frac{2}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}} f(t) \cos (\frac{2n\pi}{T}t) dt,$$
+	
+	$$b_n = \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}} f(t) \sin (\frac{2n\pi}{T}t) dt$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Teorema de Kolmogorov-Arnold}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Teorema de Superposición Kolmogorov-Arnold}
+	Sea $f$ una función continua de varias variables $f:X_1 \times ... \times X_n \rightarrow \mathbb{R}$, entonces existen funciones $\Phi_q : \mathbb{R}\rightarrow \mathbb{R}$ y $\phi_{q,p} : X_p \rightarrow [0,1]$ tales que $f$ se puede expresar como:
+	
+	$$f(x) = f(x_1, ..., x_n) = \sum_{q=0}^{2n}\Phi_q ( \sum_{p=1}^{n}\phi_{q,p}(x_p))$$
+\end{block}
+
+\pause
+
+\begin{alertblock}{Dimensionalidad en datos y funciones}
+	La maldición de la dimensionalidad es intrínseca a los datos. Este Teorema nos dice que la capacidad expresiva o complejidad de las funciones de una sola variable es la misma que las de varias variables.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Equilibrio Sesgo-Varianza}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Notación}
+	$$MSE = \frac{1}{n}\sum_{i=1}^{n}{y_i - g(X_i,\mathcal{D})}^2$$
+	
+	$$E[MSE] = \frac{1}{n}\sum_{i=1}^{n}E[{y_i - g(X_i,\mathcal{D})}^2] = \cdots$$
+	
+	$$ = \frac{1}{n}\sum_{i=1}^{n}\{ f(X_i) - E[g(X_i, \mathcal{D})] \}^2 + \frac{1}{n}\sum_{i=1}^{n}E[\{ E[g(X_i, \mathcal{D})] - g(X_i, \mathcal{D}) \}^2]$$
+	
+	$$ = sesgo^2 + varianza$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Teoría del Aprendizaje}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Teorema clave de la Teoría del Aprendizaje}
+	Para funciones de pérdida acotadas el principio inductivo de minimización del error empírico es consistente sí y sólo si el error empírico converge uniformemente al valor real del error en el siguiente sentido:
+	
+	$$\lim\limits_{n\rightarrow \infty} P[\sup_{\omega}|R(\omega) - R_{emp}(\omega)|>\epsilon] = 0 \ , \ \forall \epsilon >0$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Cota ERM}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Dimensión VC}
+	Decimos que un conjunto de funciones tiene dimensión VC $h$ si puede resolver de forma óptima todos los casos de tamaño $h$ pero existe al menos uno de tamaño $h+1$ que no puede resolver.
+\end{block}
+
+\pause
+
+\begin{block}{Cota ERM}
+	Con probabilidad $1-\eta$
+	
+	$$R(\omega) \leq R_{emp}( \omega) + \frac{\epsilon}{2} \biggl( 1+\sqrt{1+\frac{4\cdot R_{emp}(\omega)}{\epsilon}} \biggl)$$
+	
+	\pause
+	
+	$$\epsilon = a_1 \cdot \frac{h(\ln (\frac{a_2 n}{h})+1) - \ln (\frac{\eta}{4})}{n}$$
+\end{block}
+
+\end{frame}
+
 \begin{frame}[standout]
 	\LARGE{¿Preguntas?}
 	\vspace{10px}
