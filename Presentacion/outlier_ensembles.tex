@@ -382,6 +382,74 @@ La propuesta de $k=1.5$ es arbitraria.
 
 \end{frame}
 
+\section{Concepto probabilístico de anomalía}
+
+\begin{frame}[fragile]{Notación}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Notación usada}
+	$$X = \{ x_1 , ... , x_n \}, \ x_i = (x_{s_1} , ... , x_{s_d})$$
+	
+	\pause
+	
+	$$S = \{ s_i | s_i \in \{ s_1 , ... , s_d \} \ con \ i\in \Delta \}$$
+	
+	\pause
+	
+	$$X_S \ proyecci\acute{o}n \ de \ los \ datos \ en \ el \ subespacio \ S$$
+	
+	\pause
+	
+	$$p_{s_1 , ... , s_p}(x_{s_1} , ... , x_{s_p})$$
+	
+	\pause
+	
+	$$p_{s_i}(x_{s_i})$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Definiciones}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Definición subespacio incorrelado}
+	Decimos que un subespacio $S$ es un subespacio incorrelado si y sólo si:
+	
+	$$p_{s_1 , ... , s_p}(x_{s_1} , ... , {x_{s_p}}) = \prod_{i=1}^{p}p_{s_i}(x_{s_i})$$
+\end{block}
+
+\pause
+
+\begin{block}{Definición anomalía no trivial}
+	Decimos que un objeto $x_S$ es una anomalía no trivial respecto del subespacio $S$ si:
+	
+	$$p_{s_1 , ... , s_p}(x_{s_1} , ... , x_{s_p})\ll p_{esp}(x_{s_1} , ... , x_{s_p})$$
+\end{block}
+
+\pause
+
+\begin{alertblock}{Relación entre conceptos de anomalía}
+	Este concepto de anomalía es complementario.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo de anomalía}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.5]{Imagenes/ejemplo_anomalia_probabilidad}
+\end{figure}
+
+\end{frame}
+
 \begin{frame}[standout]
 	\LARGE{¿Preguntas?}
 	\vspace{10px}
