@@ -25,6 +25,8 @@
 
 \usepackage{multimedia}
 
+\usepackage[spanish,onelanguage]{algorithm2e} %for psuedo code
+
 \usepackage{xspace}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
@@ -447,6 +449,404 @@ La propuesta de $k=1.5$ es arbitraria.
 	\centering
 	\includegraphics[scale=0.5]{Imagenes/ejemplo_anomalia_probabilidad}
 \end{figure}
+
+\end{frame}
+
+\section{Modelos implementados}
+
+\begin{frame}[fragile]{Algoritmos de Ensamblaje}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Algoritmos de ensamblaje}
+	\begin{itemize}
+		\item Algoritmos secuenciales
+		\pause
+		\item Algoritmos independientes
+	\end{itemize}
+\end{block}
+
+\pause
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{Imagenes/ensamblaje-secuencial}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Algoritmos de Ensamblaje}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{block}{Algoritmos de ensamblaje}
+	\begin{itemize}
+		\item Algoritmos secuenciales
+
+		\item Algoritmos independientes
+	\end{itemize}
+\end{block}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{Imagenes/ensamblaje-independiente}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{HICS}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{HICS}}
+	
+	\KwIn{D: dataset}
+	
+	$scores = [ \ ]$
+	
+	$sub = $ subespacios de alto contraste
+	
+	\ForEach{$S \in sub$}{
+		
+		Ajustamos un modelo con el algoritmo LOF con la proyección sobre $S$
+		
+		$scores = scores + puntaje \ LOF$
+		
+	}
+	
+	$scores = \frac{scores}{|sub|}$
+	
+	\KwOut{scores: puntajes}
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{HICS}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{CalcularConstraste}}
+	
+	\KwIn{subespacio: subespacio, M: número de iteraciones del subsampling, $\alpha$: valor para obtener el tamaño de la muestra, $D$: conjunto de datos}
+	
+	$size = n \cdot \sqrt[|subespacio|]{\alpha}$
+	
+	$dev=0$
+	
+	\ForEach{$i\in [1,M]$}{
+		
+		$comp\_atr = aleatorio \ de \ subespacio$
+		
+		$sel\_obj = $ muestra aleatoria de $D$ de tamaño $size$
+		
+		$dev = dev + CalcularDev(comp\_atr, sel\_obj, subespacio, D)$
+		
+	}
+	
+	$dev = \frac{dev}{M}$
+	
+	\KwOut{$dev$: contraste}
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{HICS}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{CalcularDev}}
+	
+	\KwIn{$comp\_atr$: atributo con el que comparar, $sel\_obj$: muestra seleccionada aleatoriamente, $subespacio$: subespacio sobre el que calcular la desviación, $D$: conjunto de datos}
+	
+	$max = 0$
+	
+	\ForEach{$d\in D$}{
+		
+		$cum_1 = \sum_{o\in D} o[comp\_atr]$ si $o[comp\_atr]<d[comp\_atr]$
+		
+		$cum_2 = \sum_{o\in sel\_obj} o[comp\_atr]$ si $o[comp\_atr]<d[comp\_atr]$
+		
+		$f_a = \frac{cum_1}{|D|}$
+		
+		$f_b = \frac{cum_2}{|D|}$
+		
+		$subs = |f_a - f_b|$
+		
+		\If{$subs>max$}{
+			
+			$max = subs$
+			
+		}
+		
+	}
+	
+	\KwOut{max: máxima desviación}
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{OUTRES}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]
+	
+	\KwIn{o: instancia, S: subespacio}
+	
+	\ForEach{$i\in (D \setminus S)$}{
+		
+		$S' = S\cup \{ i \}$
+		
+		\If{$S'$ es relevante}{
+			
+			$den(o, S') = \frac{1}{n} \sum_{p\in AN(o,S')} K_e (\frac{dist_{S'}(o,p)}{\epsilon (|S'|)})$
+			
+			$dev(o,S') = \frac{\mu - den(o,S')}{2\sigma}$
+			
+			\If{$dev(o,S')\geq 1$}{
+				
+				$r(o) = r(o) \cdot \frac{den(o,S')}{dev(o,S')}$
+				
+			}
+			
+			$OUTRES(o,S')$
+			
+		}
+		
+		\Else{
+			
+			Para recursividad
+			
+		}
+		
+	}
+	
+	\KwOut{r: puntajes}
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{OUTRES}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Subespacio relevante}
+	Decimos que un subespacio es relevante si no está distribuido uniformemente.
+\end{block}
+
+\pause
+
+\begin{alertblock}{Procedimiento}
+	Si la proyección de los datos sobre un subespacio está distribuida según una uniforme entonces sus proyecciones en una dimensión también lo están.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{OUTRES}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Elementos involucrados}
+	$$AN(o,S) = \{ p | dist_{S}(o,p)\leq \epsilon (|S|) \}$$
+	
+	\pause
+	
+	$$\epsilon (|S|) = 0.5 \cdot \frac{h_{optimal}(|S|)}{h_{optimal}(2)}$$
+	
+	\pause
+	
+	$$h_{optimal} (d) = (\frac{8\Gamma (\frac{d}{2} + 1)}{\pi^{\frac{d}{2}}}(d+4)(2\sqrt{\pi})^d) n^{\frac{-1}{d+4}}$$
+	
+	\pause
+	
+	$$K_{\epsilon}(x) = (1-x^2) \ \forall x<1$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{LODA}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{ProyeccionesAleatorias}}
+	
+	\KwIn{$d$: dimension, $D$: dataset, $k$: número de histogramas y proyecciones}
+	
+	$no\_neg = [\sqrt{d}]$
+	
+	$proyecciones = [ \ ]$
+	
+	\ForEach{$i\in [1,k]$}{
+		
+		$ind = $ $no\_neg$ indices aleatorios en $[0,d]$
+		
+		$proy = $ vector con ceros en todas las posiciones menos en ind, donde hay valores sacados de una normal $\mathcal{N}(0,1)$
+		
+		$proyecciones = [proecciones, proy]$
+		
+	}
+	
+	\KwOut{$proyecciones$: proyecciones}
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{LODA}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{ObtenerHistogramas}}
+	
+	\KwIn{$D$: dataset, $\{w_i\}_{i=1}^{k}$: vectores de proyecciones, $k$: numero de histogramas y vectores de proyección}
+	
+	Inicializamos los histogramas $\{h_i\}_{i=1}^{k}$
+	
+	\For{$j=1 \rightarrow |D|$}{
+		
+		\For{$i=1\rightarrow k$}{
+			
+			$z_i = x_j^T w_i$	
+			
+			Actualiza el histograma $h_i$ con $z_i$
+			
+		}
+		
+	}
+	
+	\KwOut{$\{h_i\}_{i=1}^{k}$: histogramas}
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{LODA}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{LODA}}
+	
+	\KwIn{$x$: instancia, $\{h_i\}_{i=1}^{k}$: histogramas, $\{w_i\}_{i=1}^{k}$: vectores de proyección}
+	
+	\For{$i=1\rightarrow k$}{
+		
+		$z_i = x^T w_i$
+		
+		Obtenemos $p_i = p_i (z_i)$ del histograma $h_i$
+		
+	}
+	
+	$f = \frac{-1}{k} \sum_{i=1}^{k}\log (p_i (z_i))$
+	
+	\KwOut{$f$: puntaje de anomalía de $x$}
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{Mahalanobis Kernel}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{Mahalanobis Kernel}}
+	\KwIn{$D$}
+	
+	$S = DD^T$.
+	
+	$S = Q\Delta^2 Q^T$.
+	
+	Almacenamos los vectores propios columna no negativos de $Q\Delta$ en una matriz $D'$
+	
+	Normalizamos $D'$ para que tenga media $0$ y varianza $1$.
+	
+	$vector\_media = media(D')$
+	
+	$puntuaciones = []$
+	
+	\ForEach{fila en D'}{
+		$score = distancia(vector\_media , fila)$
+		
+		$puntuaciones = [puntuaciones, score]$
+	}
+	\KwOut{puntuaciones}
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{Trinity}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+
+\begin{block}{Componentes}
+	\begin{enumerate}
+		\item Componente basado en distancias: KNN con $k=5$
+		\pause
+		\item Componente basado en dependencia: Mahalanobis Kernel
+		\pause
+		\item Componente basado en densidad en subespacios: IForest
+	\end{enumerate}
+\end{block}
+
+\begin{alertblock}
+	Aplicamos en todos los componentes la técnica de subsampling.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Trinity}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{algorithm}[H]{\textbf{Trinity}}
+	\KwIn{$D$}
+	
+	Ejecutamos KNN con $k=5$ y guardamos el resultado en $E_1$
+	
+	Ejecutamos Mahalanobis Kernel y guardamos el resultado en $E_2$
+	
+	Ejecutamos IForest y guardamos el resultado en $E_3$
+	
+	Estandarizamos $E_1 , E_2 \ y \ E_3$ a media $0$ y varianza $1$
+	
+	Hacemos la media para obtener las puntuaciones
+	
+	\KwOut{puntuaciones}
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile]{Implementación}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Recursos usados}
+	\begin{itemize}
+		\item Implementación hecha en Python3
+		\pause
+		\item Disponible en GitHub
+		\pause
+		\item Documentada con Sphinx
+	\end{itemize}
+\end{block}
 
 \end{frame}
 
