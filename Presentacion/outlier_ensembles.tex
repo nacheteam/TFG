@@ -324,6 +324,64 @@ La propuesta de $k=1.5$ es arbitraria.
 
 \end{frame}
 
+\section{Probabilidad Multivariante}
+
+\begin{frame}[fragile]{Contenidos de la sección}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Contenidos útiles}
+	\begin{itemize}
+		\item Vectores aleatorios.
+		\pause
+		\item Independencia.
+		\pause
+		\item Probabilidad condicionada (sucesos, variables y $\sigma$-álgebras) y sus propiedades.
+		\pause
+		\item Esperanza condicionada (sucesos, variables y $\sigma$-álgebras) y sus propiedades.
+		\pause
+		\item Desigualdades famosas.
+	\end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Desigualdad de Markov y Chebychev}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Desigualdad de Markov}
+	Sea $X$ una variable aleatoria que toma valores no negativos. Entonces para cualquier constante $\alpha$ satisfaciendo $E[X]<\alpha$ se cumple que:
+	
+	$$P(X>\alpha)\leq \frac{E[X]}{\alpha}$$
+\end{block}
+
+\begin{block}{Desigualdad de Chebychev}
+	Sea $X$ una variable aleatoria arbitraria. Entonces para cualquier constante $\alpha$ se tiene que:
+	
+	$$P(|X - E[X]|>\alpha)\leq \frac{Var[X]}{\alpha^2d}$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Desigualdades famosas}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Desigualdades estudiadas}
+	\begin{itemize}
+		\item Desigualdad de Markov
+		\item Desigualdad de Chebychev
+		\item Cotas de Chernoff
+		\item Desigualdad de Hoeffding
+	\end{itemize}
+\end{block}
+
+\end{frame}
+
 \begin{frame}[standout]
 	\LARGE{¿Preguntas?}
 	\vspace{10px}
