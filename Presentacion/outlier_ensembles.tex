@@ -17,6 +17,9 @@
 
 \usepackage{graphicx}
 
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -849,6 +852,598 @@ La propuesta de $k=1.5$ es arbitraria.
 \end{block}
 
 \end{frame}
+
+\section{Resultados}
+
+\begin{frame}[fragile]{Conversión del problema a semisupervisado}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{alertblock}{Problema}
+	Si queremos medir el rendimiento de los modelos necesitamos conjuntos de datos que tengan detectadas las anomalías.
+\end{alertblock}
+
+\pause
+
+\begin{alertblock}{Solución}
+	Vamos a utilizar los conjuntos de datos de ODDS de la Universidad de Stony Brooks.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Conjuntos de datos ODDS}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{block}{Problema}
+	Conjuntos de datos mantenidos por la Universidad Stony Brooks. Etiquetados los datos con 0 si son normales y 1 si son anomalías.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Conjuntos de datos ODDS}
+\vspace{10px}
+\pause
+\metroset{block=fill}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\multicolumn{1}{|c|}{{\ul Nombre}} & \multicolumn{1}{c|}{{\ul Dimensionalidad}} & \multicolumn{1}{c|}{{\ul Número de instancias}} \\ \hline
+		annthyroid                                  & 6                                                   & 7200                                                     \\ \hline
+		arrhythmia                                  & 274                                                 & 452                                                      \\ \hline
+		breastw                                     & 9                                                   & 683                                                      \\ \hline
+		cardio                                      & 21                                                  & 1831                                                     \\ \hline
+		glass                                       & 9                                                   & 214                                                      \\ \hline
+		ionosphere                                  & 33                                                  & 351                                                      \\ \hline
+		letter                                      & 32                                                  & 1600                                                     \\ \hline
+		lympho                                      & 18                                                  & 148                                                      \\ \hline
+		mammography                                 & 6                                                   & 11183                                                    \\ \hline
+		mnist                                       & 100                                                 & 7603                                                     \\ \hline
+		musk                                        & 166                                                 & 3062                                                     \\ \hline
+		optdigits                                   & 64                                                  & 5216                                                     \\ \hline
+		pendigits                                   & 16                                                  & 6870                                                     \\ \hline
+		pima                                        & 8                                                   & 768                                                      \\ \hline
+	\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Conjuntos de datos ODDS}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\multicolumn{1}{|c|}{{\ul Nombre}} & \multicolumn{1}{c|}{{\ul Dimensionalidad}} & \multicolumn{1}{c|}{{\ul Número de instancias}} \\ \hline
+		satellite                                   & 36                                                  & 6435                                                     \\ \hline
+		satimage-2                                  & 36                                                  & 5803                                                     \\ \hline
+		speech                                      & 400                                                 & 3686                                                     \\ \hline
+		thyroid                                     & 6                                                   & 3772                                                     \\ \hline
+		vertebral                                   & 6                                                   & 240                                                      \\ \hline
+		vowels                                      & 12                                                  & 1456                                                     \\ \hline
+		wbc                                         & 30                                                  & 378                                                      \\ \hline
+		wine                                        & 13                                                  & 129                                                      \\ \hline
+	\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Modelos PyOD}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{block}{Experimentación}
+	Los 5 modelos se han puesto frente a modelos clásicos implementados en la librería PyOD.
+	
+	\pause
+	
+	Angle-Based Outlier Detection (ABOD), Connectivity-Based Outlier Factor (COF), Histogram-Based Outlier Score (HBOS), K Nearest Neighbors (KNN), Local Outlier Factor (LOF), Minimum Covariance Determinant (MCD), One-Class Support Vector Machines (OCSVM), Principal Component Analysis (PCA), Subspace Outlier Detection (SOD) y Stochastic Outlier Selection (SOS)
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Acierto}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{alertblock}{Mejores modelos}
+	Trinity, Mahalanobis Kernel y LODA
+\end{alertblock}
+
+\pause
+
+\begin{alertblock}{Peores modelos}
+	HICS y OUTRES
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Dificultad del problema}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/optdigits-score}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Buenos resultados}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/breastw-score}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Mejor resultado de HICS}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/wine-score}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Porcentaje de acierto}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{table}
+	\resizebox{\textwidth}{!}{
+	\begin{tabular}{|c|c|c|c|c|c|} 
+		\hline
+		\textbf{Data / Mod}  & \textbf{Trinity}    & \textbf{MK}         & \textbf{OUTRES}  & \textbf{LODA}       & \textbf{HICS}   \\ 
+		\hline
+		\textbf{annthyroid}   & 26.2172\%           & 12.3595\%           & 7.4906\%         & 8.9887\%            & 6.5543\%        \\ 
+		\hline
+		\textbf{arrhythmia}   & 48.4848\%           & \textbf{51.5151\%}  & NAN              & 37.8787\%           & NAN             \\ 
+		\hline
+		\textbf{breastw}      & 93.3054\%           & \textbf{95.3974\%}  & 50.6276\%        & \textbf{95.3974}    & 1.2552\%        \\ 
+		\hline
+		\textbf{cardio}       & 44.3181\%           & 51.7045\%           & NAN              & 59.0909\%           & NAN             \\ 
+		\hline
+		\textbf{glass}        & 11.1111\%           & 0\%                 & 0\%              & 0\%                 & 11.1111\%       \\ 
+		\hline
+		\textbf{ionosphere}   & 73.0158\%           & 57.1428\%           & NAN              & 46.8253\%           & NAN             \\ 
+		\hline
+		\textbf{letter}       & 16\%                & 15\%                & NAN              & 4\%                 & NAN             \\ 
+		\hline
+		\textbf{lympho}       & 83.3333\%           & 50\%                & NAN              & 0\%                 & NAN             \\ 
+		\hline
+		\textbf{mammography}  & 25.7692\%           & 1.1538\%            & 5.3846\%         & \textbf{28.0769\%}  & 8.0769\%        \\ 
+		\hline
+		\textbf{mnist}        & 40.2857\%           & \textbf{54.7142\%}  & NAN              & 2\%                 & NAN             \\ 
+		\hline
+		\textbf{musk}         & 34.0206\%           & 0\%                 & NAN              & 32.9896\%           & NAN             \\ 
+		\hline
+		\textbf{optdigits}    & 1.3333\%            & 0\%                 & NAN              & 0\%                 & NAN             \\ 
+		\hline
+		\textbf{pendigits}    & 25\%                & 16.6666\%           & 2.5641\%         & 0\%                 & NAN             \\ 
+		\hline
+		\textbf{pima}         & 50.7462\%           & 38.8059\%           & 34.7014\%        & \textbf{54.8507\%}  & 30.5970\%       \\ 
+		\hline
+	\end{tabular}
+}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Porcentaje de acierto}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{table}
+	\resizebox{\textwidth}{!}{
+	\begin{tabular}{|c|c|c|c|c|c|} 
+		\hline
+		\textbf{Data / Mod}  & \textbf{Trinity}    & \textbf{MK}         & \textbf{OUTRES}  & \textbf{LODA}       & \textbf{HICS}   \\ 
+		\hline
+		\textbf{satellite}    & 54.3713\%           & 32.8585\%           & NAN              & 12.6227\%           & NAN             \\ 
+		\hline
+		\textbf{satimage-2}   & \textbf{90.1408\%}  & \textbf{90.1408\%}  & NAN              & 0\%                 & NAN             \\ 
+		\hline
+		\textbf{speech}       & 0\%                 & 4.9180\%            & NAN              & 3.2786\%            & NAN             \\ 
+		\hline
+		\textbf{thyroid}      & 39.7849\%           & 22.5806\%           & 5.3763\%         & 1.0752\%            & 0\%             \\ 
+		\hline
+		\textbf{vertebral}    & 3.3333\%            & 10\%                & 3.3333\%         & 0\%                 & 3.3333\%        \\ 
+		\hline
+		\textbf{vowels}       & 24\%                & 0\%                 & 4\%              & 8\%                 & 32\%            \\ 
+		\hline
+		\textbf{wbc}          & 42.8571\%           & 0\%                 & NAN              & \textbf{71.4285\%}  & NAN             \\ 
+		\hline
+		\textbf{wine}         & 60\%                & 10\%                & 0\%              & 80\%                & 80\%            \\
+		\hline
+	\end{tabular}
+}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Proyecciones}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/wine}
+	\caption*{Proyección del conjunto wine}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Proyecciones}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/breastw}
+	\caption*{Proyección del conjunto breastw}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Proyecciones}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/optdigits}
+	\caption*{Proyección del conjunto optdigits}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{OUTRES}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/pima-score}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{OUTRES}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{Imagenes/pima}
+	\caption*{Proyección del conjunto pima}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{OUTRES}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.49\textwidth}
+		\centering
+		\includegraphics[scale=0.36]{Imagenes/22}
+	\end{subfigure}
+	\pause
+	\begin{subfigure}{0.49\textwidth}
+		\centering
+		\includegraphics[scale=0.36]{Imagenes/68-tsne}
+	\end{subfigure}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{OUTRES}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.49\textwidth}
+		\centering
+		\includegraphics[scale=0.36]{Imagenes/173-tsne}
+	\end{subfigure}
+	\pause
+	\begin{subfigure}{0.49\textwidth}
+		\centering
+		\includegraphics[scale=0.36]{Imagenes/190-tsne}
+	\end{subfigure}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{block}{Valores AUC}
+	$$TPR = \frac{VP}{VP + FN}, \ FPR = \frac{FP}{VN + FP}$$
+	
+	\pause
+	
+	Área bajo la curva
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{table}
+	\centering
+	\begin{tabular}{|c|c|c|c|c|c|} 
+		\hline
+		\textbf{Data / Model}  & \textbf{Tinity}  & \textbf{MK}      & \textbf{OUTRES}  & \textbf{LODA}    & \textbf{HICS}   \\ 
+		\hline
+		\textbf{annthyroid}     & 0.6015           & 0.5266           & 0.5003           & 0.5084           & 0.4953          \\ 
+		\hline
+		\textbf{arrhythmia}     & 0.6983           & \textbf{0.7161}  & NAN              & 0.6362           & NAN             \\ 
+		\hline
+		\textbf{breastw}        & 0.9485           & \textbf{0.9646}  & 0.6202           & \textbf{0.9646}  & 0.2405          \\ 
+		\hline
+		\textbf{cardio}         & 0.6919           & 0.7328           & NAN              & 0.7737           & NAN             \\ 
+		\hline
+		\textbf{glass}          & 0.5360           & 0.4780           & 0.4780           & 0.4780           & 0.5360          \\ 
+		\hline
+		\textbf{ionosphere}     & 0.7895           & 0.6657           & NAN              & 0.5852           & NAN             \\ 
+		\hline
+		\textbf{letter}         & 0.5519           & 0.5466           & NAN              & 0.488            & NAN             \\ 
+		\hline
+		\textbf{lympho}         & \textbf{0.9131}  & 0.7394           & NAN              & 0.4788           & NAN             \\ 
+		\hline
+		\textbf{mammography}    & 0.6200           & 0.4940           & 0.5156           & \textbf{0.6318}  & 0.5294          \\ 
+		\hline
+		\textbf{mnist}          & 0.6711           & \textbf{0.7506}  & NAN              & 0.4603           & NAN             \\ 
+		\hline
+		\textbf{musk}           & 0.6593           & 0.4836           & NAN              & 0.6539           & NAN             \\ 
+		\hline
+		\textbf{optdigits}      & 0.4920           & 0.4851           & NAN              & 0.4851           & NAN             \\ 
+		\hline
+		\textbf{pendigits}      & 0.6162           & 0.5736           & 0.5015           & 0.4883           & NAN             \\ 
+		\hline
+		\textbf{pima}           & 0.6217           & 0.5300           & 0.4985           & \textbf{0.6532}  & 0.4669          \\ 
+		\hline
+	\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{table}
+	\centering
+	\begin{tabular}{|c|c|c|c|c|c|} 
+		\hline
+		\textbf{Data / Model}  & \textbf{Tinity}  & \textbf{MK}      & \textbf{OUTRES}  & \textbf{LODA}    & \textbf{HICS}   \\ 
+		\hline
+		\textbf{satellite}      & 0.6662           & 0.5089           & NAN              & 0.3609           & NAN             \\ 
+		\hline
+		\textbf{satimage-2}     & \textbf{0.9500}  & \textbf{0.9500}  & NAN              & 0.4938           & NAN             \\ 
+		\hline
+		\textbf{speech}         & 0.4915           & 0.5165           & NAN              & 0.5082           & NAN             \\ 
+		\hline
+		\textbf{thyroid}        & 0.6913           & 0.6031           & 0.5149           & 0.4928           & 0.4873          \\ 
+		\hline
+		\textbf{vertebral}      & 0.4476           & 0.4857           & 0.4476           & 0.4285           & 0.4476          \\ 
+		\hline
+		\textbf{vowels}         & 0.6064           & 0.4822           & 0.5029           & 0.5236           & 0.6479          \\ 
+		\hline
+		\textbf{wbc}            & 0.6974           & 0.4705           & NAN              & \textbf{0.8487}  & NAN             \\ 
+		\hline
+		\textbf{wine}           & 0.7831           & 0.5121           & 0.4579           & 0.8915           & 0.8915          \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/TRINITY_vertebral}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/TRINITY_satimage-2}
+	\end{subfigure}
+	\caption*{Curvas ROC para Trinity}
+	\label{ROC_TRINITY}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/Mahalanobis_Kernel_wbc}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/Mahalanobis_Kernel_breastw}
+	\end{subfigure}
+	\caption*{Curvas ROC para Mahalanobis Kernel}
+	\label{ROC_MK}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/OUTRES_vertebral}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/OUTRES_breastw}
+	\end{subfigure}
+	\caption*{Curvas ROC para OUTRES}
+	\label{ROC_OUTRES}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/LODA_satellite}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/LODA_breastw}
+	\end{subfigure}
+	\caption*{Curvas ROC para LODA}
+	\label{ROC_LODA}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{AUC y ROC}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/HICS_breastw}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[scale=0.35]{Imagenes/roc/HICS_wine}
+	\end{subfigure}
+	\caption*{Curvas ROC para HICS}
+	\label{ROC_HICS}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Tiempos}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{table}
+	\resizebox{\textwidth}{!}{
+	\begin{tabular}{|c|c|c|c|c|c|} 
+		\hline
+		\textbf{Data / Mod}  & \textbf{Trinity}  & \textbf{MK}  & \textbf{OUTRES}  & \textbf{LODA}  & \textbf{HICS}   \\ 
+		\hline
+		\textbf{annthyroid}   & 28.5212           & 390.5937     & 193.6110         & 137.8692       & 1169.3422       \\ 
+		\hline
+		\textbf{arrhythmia}   & 28.8828           & 0.1243       & NAN              & 9.0474         & NAN             \\ 
+		\hline
+		\textbf{breastw}      & 23.3296           & 0.3165       & 117.8225         & 13.2879        & 315.4130        \\ 
+		\hline
+		\textbf{cardio}       & 33.0496           & 6.5851       & NAN              & 36.6768        & NAN             \\ 
+		\hline
+		\textbf{glass}        & 12.5272           & 0.0220       & 11.5349          & 4.0798         & 79.2560         \\ 
+		\hline
+		\textbf{ionosphere}   & 16.5319           & 0.0565       & NAN              & 6.9664         & NAN             \\ 
+		\hline
+		\textbf{letter}       & 41.8301           & 5.1648       & NAN              & 31.8875        & NAN             \\ 
+		\hline
+		\textbf{lympho}       & 12.2874           & 0.0187       & NAN              & 2.8804         & NAN             \\ 
+		\hline
+		\textbf{mammography}  & 31.5619           & 1444.1323    & 27765.1978       & 224.8207       & 2502.0258       \\ 
+		\hline
+		\textbf{mnist}        & 42.7623           & 464.8962     & NAN              & 150.1434       & NAN             \\ 
+		\hline
+		\textbf{musk}         & 42.8683           & 34.4336      & NAN              & 60.4207        & NAN             \\ 
+		\hline
+		\textbf{optdigits}    & 36.2723           & 145.6876     & NAN              & 103.9115       & NAN             \\ 
+		\hline
+		\textbf{pendigits}    & 34.0999           & 340.2855     & 2757.0345        & 135.0839       & NAN             \\ 
+		\hline
+		\textbf{pima}         & 26.3576           & 0.3482       & 40.6379          & 15.2128        & 150.1283        \\ 
+		\hline
+	\end{tabular}
+}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Tiempos}
+\vspace{10px}
+\metroset{block=fill}
+
+\begin{table}
+	\resizebox{\textwidth}{!}{
+	\begin{tabular}{|c|c|c|c|c|c|} 
+		\hline
+		\textbf{Data / Mod}  & \textbf{Trinity}  & \textbf{MK}  & \textbf{OUTRES}  & \textbf{LODA}  & \textbf{HICS}   \\ 
+		\hline
+		\textbf{satellite}    & 48.2618           & 301.9960     & NAN              & 129.6712       & NAN             \\ 
+		\hline
+		\textbf{satimage-2}   & 39.7535           & 200.5037     & NAN              & 113.2818       & NAN             \\ 
+		\hline
+		\textbf{speech}       & 76.6633           & 62.2470      & NAN              & 73.0844        & NAN             \\ 
+		\hline
+		\textbf{thyroid}      & 32.6503           & 65.3469      & 64.2370          & 72.1607        & 376.2697        \\ 
+		\hline
+		\textbf{vertebral}    & 13.4726           & 0.0301       & 1.7653           & 4.6250         & 9.1404          \\ 
+		\hline
+		\textbf{vowels}       & 36.2093           & 3.1876       & 426.6157         & 28.2930        & 5126.5627       \\ 
+		\hline
+		\textbf{wbc}          & 17.0011           & 0.0675       & NAN              & 7.5109         & NAN             \\ 
+		\hline
+		\textbf{wine}         & 11.2756           & 0.0165       & 58.9642          & 2.4540         & 774.9212        \\
+		\hline
+	\end{tabular}
+}
+\end{table}
+
+\end{frame}
+
+\section{Conclusiones y Trabajo Futuro}
+
+\begin{frame}[fragile]{Conclusiones y trabajo futuro}
+\vspace{10px}
+\metroset{block=fill}
+
+
+
+\end{frame}
+
 
 \begin{frame}[standout]
 	\LARGE{¿Preguntas?}
